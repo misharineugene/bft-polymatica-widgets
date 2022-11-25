@@ -1,0 +1,109 @@
+$bg-color: #d1d5db;
+$border-color: #9ca3af;
+$sort-color: #4e5259;
+
+.htable {
+  :global {
+    margin: 50px;
+    .ant-table-thead > tr:last-child > th:first-child {
+      padding: 0;
+
+      .ant-table-column {
+        &-sorters {
+          flex-direction: row-reverse;
+          padding: 16px;
+          //
+          background-image: linear-gradient(
+            to top right,
+            transparent 49%,
+            $border-color,
+            transparent 51%
+          );
+          background-repeat: no-repeat;
+        }
+        &-title {
+          display: inline-flex;
+          justify-content: space-between;
+        }
+
+        &-sorter {
+          margin-left: 0;
+          margin-right: 4px;
+        }
+      }
+    }
+
+    .ant-table-tbody > tr > td:first-child {
+      display: flex;
+
+      .ant-table-row-expand-icon {
+        flex: 0 0 17px;
+      }
+    }
+  }
+}
+
+.anywhere {
+  :global {
+    .ant-table-thead > tr > th {
+      overflow-wrap: anywhere;
+    }
+
+    .ant-table-tbody > tr > td {
+      word-wrap: break-word;
+      word-break: break-all;
+
+      &:first-child {
+        display: table-cell;
+      }
+    }
+  }
+}
+
+.theme {
+  &--default {
+    :global {
+      .ant-table-column-sorter {
+        color: $sort-color;
+      }
+
+      .ant-table-thead > tr > th {
+        background: $bg-color;
+        border-bottom: 1px solid $border-color;
+      }
+
+      .ant-table-tbody > tr > td {
+        border-bottom: 1px solid $border-color;
+      }
+
+      .ant-table.ant-table-bordered > .ant-table-container {
+        border-left: 1px solid $border-color;
+
+        & > .ant-table-header,
+        & > .ant-table-content {
+          & > table {
+            border-top: 1px solid $border-color;
+          }
+        }
+
+        & > .ant-table-header,
+        & > .ant-table-content,
+        & > .ant-table-body,
+        & > .ant-table-summary {
+          & > table {
+            & > thead > tr > th,
+            & > tbody > tr > td,
+            & > tfoot > tr > th,
+            & > tfoot > tr > td {
+              border-right: 1px solid $border-color;
+            }
+
+            & > thead > tr:not(:last-child) > th {
+              border-bottom: 1px solid $border-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}
