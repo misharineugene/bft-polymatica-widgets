@@ -1,3 +1,4 @@
+import { TablePaginationConfig } from 'antd';
 import { Key, ReactElement } from 'react';
 
 type ColumnType = {
@@ -30,5 +31,9 @@ export interface IState {
     theme: string;
     anywhere: boolean;
     defaultExpandedRowKeys: Key[];
+    pagination: false | TablePaginationConfig;
+    tableWidth: number | string;
+    rowTotalFixed: boolean;
+    rowTotalV: 'top' | 'bottom';
   };
 }
