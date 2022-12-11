@@ -6,4 +6,31 @@ export enum EBlockKey {
 export enum EViewKey {
   Digital = 'Digital',
   DigitalNum = 'DigitalNum',
+  //
+  IsValue_1_Name = 'IsValue_1_Name',
+  Value_1_Name = 'Value_1_Name',
+  IsValue_2_Name = 'IsValue_2_Name',
+  Value_2_Name = 'Value_2_Name',
+  //
+  IsChange = 'IsChange',
+  ChangeName = 'ChangeName',
+  ChangeFormula = 'ChangeFormula',
+  ChangeColorMax = 'ChangeColorMax',
+  ChangeColorThr = 'ChangeColorThr',
+  ChangeColorMin = 'ChangeColorMin',
+  //
+  IsExecution = 'IsExecution',
+  ExecutionName = 'ExecutionName',
+  ExecutionFormula = 'ExecutionFormula',
+  ExecutionColorMax = 'ExecutionColorMax',
+  ExecutionColorThr = 'ExecutionColorThr',
+  ExecutionColorMin = 'ExecutionColorMin',
+  //
+  //
+  IsRateOfIncrease = 'IsRateOfIncrease',
+  RateOfIncreaseName = 'RateOfIncreaseName',
+  RateOfIncreaseFormula = 'RateOfIncreaseFormula',
+  RateOfIncreaseColorMax = 'RateOfIncreaseColorMax',
+  RateOfIncreaseColorThr = 'RateOfIncreaseColorThr',
+  RateOfIncreaseColorMin = 'RateOfIncreaseColorMin',
 }

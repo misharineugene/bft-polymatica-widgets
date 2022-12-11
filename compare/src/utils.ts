@@ -152,3 +152,52 @@ export const getHR = (name?) => {
     defaultValue: (name || hrs)[0][0],
   });
 };
+//
+export const calculate = (string) => {
+  const arr = string.split(' ');
+
+  let result = 0;
+
+  for (let i = 0; i < arr.length; i++) {
+    if (i === 0) {
+      result = +arr[i];
+    }
+
+    if (
+      (arr[i] === '0' && arr[i + 1] === '/') ||
+      (arr[i] === '/' && arr[i + 1] === '0')
+    ) {
+      result = +0;
+
+      continue;
+    }
+
+    switch (arr[i]) {
+      case '+':
+        result += +arr[i + 1];
+        ++i;
+        break;
+
+      case '-':
+        result -= +arr[i + 1];
+        ++i;
+        break;
+
+      case '/':
+        result /= +arr[i + 1];
+        ++i;
+        break;
+
+      case '*':
+        result *= +arr[i + 1];
+        ++i;
+        break;
+    }
+  }
+
+  return result;
+};
+//
+export const getColumn = (name, value) => {
+  return `<div class="root__item"><strong>${name}</strong> ${value}</div>`;
+};
