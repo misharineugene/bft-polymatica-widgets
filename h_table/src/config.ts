@@ -50,11 +50,20 @@ export const config: Config = {
         columnTypes: [ColumnType.Number],
       }),
       block({
-        key: EBlockKey.VALUES_HIDE,
+        key: EBlockKey.VALUES_NO_TOTAL,
         dataQueryFunction: DataQueryFunction.Sum,
         label: {
           ru: 'Показатели для которых не рассчитывать итог',
           en: 'Indicators for which the total is not calculated',
+        },
+        columnTypes: [ColumnType.Number],
+      }),
+      block({
+        key: EBlockKey.VALUES_HIDE,
+        dataQueryFunction: DataQueryFunction.Sum,
+        label: {
+          ru: 'Показатели с настройкой отображения в иерархии',
+          en: 'Indicators with settings for display in hierarchical',
         },
         columnTypes: [ColumnType.Number],
       }),

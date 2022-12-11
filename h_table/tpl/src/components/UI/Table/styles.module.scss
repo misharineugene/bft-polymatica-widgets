@@ -4,22 +4,37 @@ $sort-color: #4e5259;
 
 .htable {
   :global {
-    margin: 50px;
     .ant-table-thead > tr:last-child > th:first-child {
       padding: 0;
 
+      &::after {
+        content: '';
+        //
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 0;
+        //
+        display: block;
+        //
+        background-image: linear-gradient(
+          to top right,
+          transparent 49%,
+          $border-color,
+          transparent 51%
+        );
+        background-repeat: no-repeat;
+      }
+
       .ant-table-column {
         &-sorters {
+          position: relative;
+          z-index: 1;
+          //
           flex-direction: row-reverse;
           padding: 16px;
-          //
-          background-image: linear-gradient(
-            to top right,
-            transparent 49%,
-            $border-color,
-            transparent 51%
-          );
-          background-repeat: no-repeat;
         }
         &-title {
           display: inline-flex;
@@ -33,28 +48,45 @@ $sort-color: #4e5259;
       }
     }
 
-    .ant-table-tbody > tr > td:first-child {
-      display: flex;
+    .ant-table-thead > tr > th {
+      font-weight: 700;
+    }
 
-      .ant-table-row-expand-icon {
-        flex: 0 0 17px;
-      }
+    .ant-table-tbody > tr > td:first-child {
+      background-color: $bg-color;
+    }
+
+    .ant-table.ant-table-bordered>.ant-table-container>.ant-table-body>table>tbody>tr>.ant-table-cell-fix-right-first:after, .ant-table.ant-table-bordered>.ant-table-container>.ant-table-body>table>tfoot>tr>.ant-table-cell-fix-right-first:after, .ant-table.ant-table-bordered>.ant-table-container>.ant-table-body>table>thead>tr>.ant-table-cell-fix-right-first:after, .ant-table.ant-table-bordered>.ant-table-container>.ant-table-content>table>tbody>tr>.ant-table-cell-fix-right-first:after, .ant-table.ant-table-bordered>.ant-table-container>.ant-table-content>table>tfoot>tr>.ant-table-cell-fix-right-first:after, .ant-table.ant-table-bordered>.ant-table-container>.ant-table-content>table>thead>tr>.ant-table-cell-fix-right-first:after, .ant-table.ant-table-bordered>.ant-table-container>.ant-table-header>table>tbody>tr>.ant-table-cell-fix-right-first:after, .ant-table.ant-table-bordered>.ant-table-container>.ant-table-header>table>tfoot>tr>.ant-table-cell-fix-right-first:after, .ant-table.ant-table-bordered>.ant-table-container>.ant-table-header>table>thead>tr>.ant-table-cell-fix-right-first:after, .ant-table.ant-table-bordered>.ant-table-container>.ant-table-summary>table>tbody>tr>.ant-table-cell-fix-right-first:after, .ant-table.ant-table-bordered>.ant-table-container>.ant-table-summary>table>tfoot>tr>.ant-table-cell-fix-right-first:after, .ant-table.ant-table-bordered>.ant-table-container>.ant-table-summary>table>thead>tr>.ant-table-cell-fix-right-first:after {
+      border-right: 1px solid $border-color;
     }
   }
 }
 
-.anywhere {
-  :global {
-    .ant-table-thead > tr > th {
-      overflow-wrap: anywhere;
+.fixed-row {
+  &--top {
+    :global {
+      .ant-table-tbody > tr:nth-child(2) {
+        position: sticky;
+        top: 0;
+        z-index: 9;
+        // 
+        background-color: #fff;
+      }
     }
+  }
+ 
+  &--bottom {
+    :global {
+      .ant-table-tbody > tr:last-child {
+        position: sticky;
+        bottom: 0;
+        z-index: 9;
+        // 
+        background-color: #fff;
 
-    .ant-table-tbody > tr > td {
-      word-wrap: break-word;
-      word-break: break-all;
-
-      &:first-child {
-        display: table-cell;
+        & > td {
+          border-top: 1px solid $border-color;
+        } 
       }
     }
   }
