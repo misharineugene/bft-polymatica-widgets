@@ -1,5 +1,7 @@
 import { select } from 'ptnl-constructor-sdk/config';
 import { hrs } from './constants';
+//
+import Color from 'color';
 
 export const toSlug = (string) => {
   const translate = {
@@ -198,6 +200,58 @@ export const calculate = (string) => {
   return result;
 };
 //
-export const getColumn = (name, value) => {
-  return `<div class="root__item"><strong>${name}</strong> ${value}</div>`;
+export const getColumn = (name, value, style?) => {
+  return `<div class="root__item" >${name} <strong ${
+    style ? 'style="' + style + '"' : ''
+  }>${value}</strong></div>`;
+};
+//
+export const getRangeColor = (colors, range) => {
+  const [colorMin, colorMax] = colors;
+  const [max, porog, min] = range.split(' > ');
+  const percent = (max - min) / 100;
+
+  const minPercent = Math.round((porog - min) / percent);
+  const maxPercent = Math.round((max - porog) / percent);
+
+  const minColors = new Array(minPercent).fill('');
+  const maxColors = new Array(maxPercent).fill('');
+
+  const minLighten = 100 - minPercent > 25 ? 0.0025 : 0.0075;
+  const maxLighten = 100 - maxPercent > 25 ? 0.005 : 0.0075;
+
+  const newColors = {};
+
+  minColors.forEach((_, index) => {
+    const isFirst = index === 0;
+    minColors[index] = isFirst
+      ? Color(colorMin).hex()
+      : Color(minColors[index - 1])
+          .lighten(minLighten)
+          .hex();
+  });
+
+  maxColors.forEach((_, index) => {
+    const isFirst = index === 0;
+    maxColors[index] = isFirst
+      ? Color(colorMax).hex()
+      : Color(maxColors[index - 1])
+          .lighten(maxLighten)
+          .hex();
+  });
+
+  minColors.forEach((color, index) => {
+    newColors[index] = color;
+  });
+
+  maxColors.reverse().forEach((color, index) => {
+    newColors[minColors.length + index] = color;
+  });
+
+  return {
+    colors: newColors,
+    max,
+    porog,
+    min,
+  };
 };
