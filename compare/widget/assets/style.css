@@ -21,7 +21,7 @@ body {
   /*  */
   color: #000;
   /*  */
-  background-color: #dedede;
+  background-color: #fff;
 }
 
 .root__item {
@@ -33,5 +33,5 @@ body {
 }
 
 .root__item strong {
-  margin-right: 10px;
+  margin-left: 10px;
 }

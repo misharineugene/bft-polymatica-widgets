@@ -9,6 +9,7 @@ import {
   slugToPath,
   calculate,
   getColumn,
+  getRangeColor,
 } from './utils';
 
 @Declare({
@@ -165,34 +166,94 @@ export class Compare extends Widget implements SingleData {
     //
     if (settings[EViewKey.IsChange]) {
       const changeName = settings[EViewKey.ChangeName];
+      const changeColorMax = settings[EViewKey.ChangeColorMax];
+      const changeColorThr = settings[EViewKey.ChangeColorThr];
+      const changeColorMin = settings[EViewKey.ChangeColorMin];
+      const changeColors = getRangeColor(
+        [changeColorMin, changeColorMax],
+        changeColorThr,
+      );
+      //
       const changeValue = this.data.reduce((acc, dataItem) => {
         return (acc += dataItem['col_new_0']);
       }, 0);
+      //
+      const valuePercent = Math.round((changeValue * 100) / changeColors.max);
+      const currentColor = changeColors.colors[valuePercent];
+      //
+      let style = '';
+      if (currentColor) {
+        style = `color: ${currentColor}`;
+      }
+
       root.innerHTML += getColumn(
         changeName,
         (changeValue > 0 ? '+' : '') + this.toDigital(changeValue),
+        style,
       );
     }
     //
     if (settings[EViewKey.IsExecution]) {
       const executionName = settings[EViewKey.ExecutionName];
+      const executionColorMax = settings[EViewKey.ExecutionColorMax];
+      const executionColorThr = settings[EViewKey.ExecutionColorThr];
+      const executionColorMin = settings[EViewKey.ExecutionColorMin];
+      const executionColors = getRangeColor(
+        [executionColorMin, executionColorMax],
+        executionColorThr,
+      );
+      //
       const executionValue = this.data.reduce((acc, dataItem) => {
         return (acc += dataItem['col_new_1']);
       }, 0);
+      //
+      const valuePercent = Math.round(
+        (executionValue * 100) / executionColors.max,
+      );
+      const currentColor = executionColors.colors[valuePercent];
+      //
+      let style = '';
+      if (currentColor) {
+        style = `color: ${currentColor}`;
+      }
+
       root.innerHTML += getColumn(
         executionName,
-        this.toDigital(executionValue) + '%',
+        (executionValue > 0 ? '+' : '') + this.toDigital(executionValue) + '%',
+        style,
       );
     }
     //
     if (settings[EViewKey.IsRateOfIncrease]) {
       const rateOfIncreaseName = settings[EViewKey.RateOfIncreaseName];
+      //
+      const rateOfIncreaseColorMax = settings[EViewKey.RateOfIncreaseColorMax];
+      const rateOfIncreaseColorThr = settings[EViewKey.RateOfIncreaseColorThr];
+      const rateOfIncreaseColorMin = settings[EViewKey.RateOfIncreaseColorMin];
+      const rateOfIncreaseColors = getRangeColor(
+        [rateOfIncreaseColorMin, rateOfIncreaseColorMax],
+        rateOfIncreaseColorThr,
+      );
+      //
       const rateOfIncreaseValue = this.data.reduce((acc, dataItem) => {
         return (acc += dataItem['col_new_2']);
       }, 0);
+      //
+      const valuePercent = Math.round(
+        (rateOfIncreaseValue * 100) / rateOfIncreaseColors.max,
+      );
+      const currentColor = rateOfIncreaseColors.colors[valuePercent];
+      //
+      let style = '';
+      if (currentColor) {
+        style = `color: ${currentColor}`;
+      }
+
       root.innerHTML += getColumn(
         rateOfIncreaseName,
-        this.toDigital(rateOfIncreaseValue) + '%',
+        (rateOfIncreaseValue > 0 ? '+' : '') +
+          this.toDigital(rateOfIncreaseValue) + '%',
+        style,
       );
     }
   }

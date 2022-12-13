@@ -1,5 +1,6 @@
 import {
   checkbox,
+  colorPicker,
   CreateViewSettings,
   input,
   ViewSettingsValidation,
@@ -94,12 +95,36 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
     input({
       key: EViewKey.ChangeFormula,
       label: {
-        ru: 'Формула Изменения',
+        ru: 'Формула Изменение',
         en: 'Formula Change',
       },
       defaultValue: `${columnsByBlock[EBlockKey.VALUE_1][0].name} - ${
         columnsByBlock[EBlockKey.VALUE_2][0].name
       }`,
+    }),
+    colorPicker({
+      key: EViewKey.ChangeColorMax,
+      label: {
+        ru: `Цвет значения Изменение (Наибольшее число)`,
+        en: `Value Color Change (Highest Number)`,
+      },
+      defaultValue: 'green',
+    }),
+    input({
+      key: EViewKey.ChangeColorThr,
+      label: {
+        ru: `Формула (Наибольшее число > Порог > Наименьшее число) значения Изменение`,
+        en: `Formula (Highest number > Threshold > Lowest number) value Change`,
+      },
+      defaultValue: '100 > 50 > 0',
+    }),
+    colorPicker({
+      key: EViewKey.ChangeColorMin,
+      label: {
+        ru: `Цвет значения Изменение (Наименьшее число)`,
+        en: `Value Color Change (Least Number)`,
+      },
+      defaultValue: 'red',
     }),
     //
     getHR(getBlockLabel('Исполнение', 'Execution')),
@@ -130,7 +155,30 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
         columnsByBlock[EBlockKey.VALUE_2][0].name
       } * 100`,
     }),
-    //
+    colorPicker({
+      key: EViewKey.ExecutionColorMax,
+      label: {
+        ru: `Цвет значения Исполнение (Наибольшее число)`,
+        en: `Value Color Execution (Highest Number)`,
+      },
+      defaultValue: 'green',
+    }),
+    input({
+      key: EViewKey.ExecutionColorThr,
+      label: {
+        ru: `Формула (Наибольшее число > Порог > Наименьшее число) значения Исполнение`,
+        en: `Formula (Highest number > Threshold > Lowest number) value Execution`,
+      },
+      defaultValue: '100 > 50 > 0',
+    }),
+    colorPicker({
+      key: EViewKey.ExecutionColorMin,
+      label: {
+        ru: `Цвет значения Исполнение (Наименьшее число)`,
+        en: `Value Color Execution (Least Number)`,
+      },
+      defaultValue: 'red',
+    }),
     //
     getHR(getBlockLabel('Темп прироста', 'Rate of increase')),
     //
@@ -159,6 +207,30 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
       defaultValue: `${columnsByBlock[EBlockKey.VALUE_1][0].name} / ${
         columnsByBlock[EBlockKey.VALUE_2][0].name
       } * 100 - 100`,
+    }),
+    colorPicker({
+      key: EViewKey.RateOfIncreaseColorMax,
+      label: {
+        ru: `Цвет значения Темп прироста (Наибольшее число)`,
+        en: `Value Color RateOfIncrease (Highest Number)`,
+      },
+      defaultValue: 'green',
+    }),
+    input({
+      key: EViewKey.RateOfIncreaseColorThr,
+      label: {
+        ru: `Формула (Наибольшее число > Порог > Наименьшее число) значения Темп прироста`,
+        en: `Formula (Highest number > Threshold > Lowest number) value RateOfIncrease`,
+      },
+      defaultValue: '10 > 5 > 0',
+    }),
+    colorPicker({
+      key: EViewKey.RateOfIncreaseColorMin,
+      label: {
+        ru: `Цвет значения Темп прироста (Наименьшее число)`,
+        en: `Value Color RateOfIncrease (Least Number)`,
+      },
+      defaultValue: 'red',
     }),
   ];
 };
