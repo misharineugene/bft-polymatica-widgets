@@ -1,4 +1,4 @@
-import React, { createElement, Fragment } from 'react';
+import { createElement, Fragment } from 'react';
 //
 import { Declare, SingleData, Widget } from 'ptnl-constructor-sdk';
 import { Filter, FilterMethod, Target } from 'ptnl-constructor-sdk/data';
@@ -18,6 +18,11 @@ import {
   toNumber,
   slugToType,
   getKey,
+  calculate,
+  getRangeColor,
+  toTag,
+  createDeepCopy,
+  getIsValue,
 } from './utils';
 import { colType, rowType } from './types';
 
@@ -87,6 +92,15 @@ export class HTable extends Widget implements SingleData {
     return value.toLocaleString();
   };
 
+  private toTotal = (value) => {
+    const settings = this.viewSettings;
+    const totalTag = settings[EViewKey.TotalTag];
+
+    return toStrong(this.toDigital(value), {
+      className: totalTag ? 'total tag' : 'total',
+    });
+  };
+
   private getChartDataset = () => {
     const settings = this.viewSettings;
     const { columnsByBlock } = this.dataSettings;
@@ -94,6 +108,8 @@ export class HTable extends Widget implements SingleData {
     const firstColName = settings[EViewKey.FirstColName];
     //
     const defaultOpenLvl = +settings[EViewKey.DefaultOpenLvl];
+    const defaultExpandAllRows =
+      defaultOpenLvl === columnsByBlock[EBlockKey.ROWS].length - 1;
     //
     const total = settings[EViewKey.Total];
     //
@@ -112,8 +128,9 @@ export class HTable extends Widget implements SingleData {
     const pagination = settings[EViewKey.Pagination];
     const pageSize = +settings[EViewKey.PageSize];
     //
-    // const headerFixed = settings[EViewKey.HeaderFixed];
-    const headerFixed = false;
+    const firstColWidth = +settings[EViewKey.FirstColWidth];
+    const contentWidth = +settings[EViewKey.ContentWidth];
+    const totalColWidth = +settings[EViewKey.TotalColWidth];
     //
     this.defaultOpen = [];
     let currentPage = 0;
@@ -129,19 +146,20 @@ export class HTable extends Widget implements SingleData {
         ],
       }),
       dataIndex: 'name',
-      ...(colTotalFixed && {
-        fixed: colTotalH,
-      }),
+      key: 'name',
+      width: firstColWidth,
       sorter: (a, b) => sort(a.name, b.name, true),
       render: (text) => toStrong(text, { className: 'name' }),
     };
     let totalColumn = {
       title: 'Всего',
       dataIndex: 'total',
+      key: 'total',
       align: colTotalH,
       ...(colTotalFixed && {
         fixed: colTotalH,
       }),
+      width: totalColWidth,
       sorter: (a, b) => sort(a.total, b.total),
     };
     let totalRow = {
@@ -155,29 +173,91 @@ export class HTable extends Widget implements SingleData {
     const rowsBlock = columnsByBlock[EBlockKey.ROWS];
     const valuesBlock = columnsByBlock[EBlockKey.VALUES];
     const valuesNoTotalBlock = columnsByBlock[EBlockKey.VALUES_NO_TOTAL];
-    const valuesHideBlock = columnsByBlock[EBlockKey.VALUES_HIDE];
     //
     const columnsPaths = columnsBlock.map((item) => item.path);
     const rowsPaths = rowsBlock.map((item) => item.path);
     const valuesPaths = valuesBlock.map((item) => item.path);
     const valuesNoTotalPaths = valuesNoTotalBlock.map((item) => item.path);
-    const valuesHidePaths = valuesHideBlock.map((item) => item.path);
     //
     const columnsNames = columnsBlock.map((item) => item.name);
     const rowsNames = rowsBlock.map((item) => item.name);
     const valuesNames = valuesBlock.map((item) => item.name);
-    const valuesNoTotalNames = valuesNoTotalBlock.map((item) => item.name);
-    const valuesHideNames = valuesHideBlock.map((item) => item.name);
     //
     const valuesNameToPath = nameToPath(valuesBlock);
     const valuesSlugToPath = slugToPath(valuesBlock);
     const valuesNameToType = nameToType(valuesBlock);
     const valuesSlugToType = slugToType(valuesBlock);
+    const valuesSlugToColor = {};
     //
     const uniqueNamesByPath = this.getUniqueValuesByPath([
       ...columnsPaths,
       ...rowsPaths,
     ]);
+    //
+    const newValsCount = +settings[EViewKey.newValsCount];
+    const newValsPlus = [];
+    //
+    for (let i = 0; i < newValsCount; i++) {
+      let name = settings[EViewKey['newValName_' + i]];
+      if (typeof name !== 'undefined') {
+        const path = 'col_new_' + i;
+        //
+        if (name.includes('(+)')) {
+          newValsPlus.push(path);
+          //
+          name = name.replace('(+)', '');
+          name = name.trim();
+        }
+        //
+        const formula = settings[EViewKey['newValFormula_' + i]].toLowerCase();
+        const formula_arr = formula.split(/ \+ | - | \* | \/ /g);
+        const totalHide = settings[EViewKey['newValTotal_' + i]];
+        const slug = toSlug(name);
+        //
+        const isTag = settings[EViewKey['newValColor_' + i]];
+        const color_min = settings[EViewKey['newValColorMin_' + i]];
+        const color_thr = settings[EViewKey['newValColorThr_' + i]];
+        const color_max = settings[EViewKey['newValColorMax_' + i]];
+        const colors = getRangeColor(isTag, [color_min, color_max], color_thr);
+
+        valuesPaths.push(path);
+        valuesNames.push(name);
+        valuesNameToPath[name] = path;
+        valuesSlugToPath[slug] = path;
+        valuesNameToType[name] = 'number';
+        valuesSlugToType[slug] = 'number';
+        valuesSlugToColor[slug] = colors;
+
+        if (totalHide) {
+          valuesNoTotalPaths.push(path);
+        }
+
+        let formulaL = formula;
+        const paths = [];
+
+        valuesNames.forEach((valName) => {
+          formula_arr.forEach((item) => {
+            if (valName.toLowerCase() === item) {
+              paths.push(valuesNameToPath[valName]);
+            }
+          });
+
+          formulaL = formulaL.replace(
+            valName.toLowerCase(),
+            valuesNameToPath[valName],
+          );
+        });
+
+        this.data.forEach((dataItem) => {
+          let newFormula = formulaL;
+          paths.forEach((path) => {
+            newFormula = newFormula.replace(path, dataItem[path]);
+          });
+
+          dataItem[path] = calculate(newFormula);
+        });
+      }
+    }
 
     const columns: colType[] = columnsPaths.map((pathItem, index) => {
       const cols = uniqueNamesByPath[pathItem];
@@ -237,15 +317,16 @@ export class HTable extends Widget implements SingleData {
         if (isSum) {
           haveVals = true;
           const value = toNumber(row[key]);
-          return (acc += value);
+          if (getIsValue(value, newValsPlus.includes(valPath))) {
+            return (acc += value);
+          }
+          return acc;
         }
 
         return acc;
       }, 0);
 
-      row['total'] = haveVals
-        ? toStrong(this.toDigital(total), { className: 'total' })
-        : '';
+      row['total'] = haveVals ? this.toTotal(total) : '';
     };
 
     const totalRowRender = (col, path, name, slug) => {
@@ -257,12 +338,14 @@ export class HTable extends Widget implements SingleData {
           return (accData += dataItem[path]);
         }, 0);
 
-        allT += total;
-        totalRow[toSlug(name)] = toStrong(this.toDigital(total), {
-          className: 'total',
-        });
+        if (getIsValue(total, newValsPlus.includes(path))) {
+          allT += total;
+          totalRow[toSlug(name)] = this.toTotal(total);
+        } else {
+          totalRow[toSlug(name)] = '';
+        }
       } else {
-        totalRow[slug] = '';
+        totalRow[toSlug(name)] = '';
       }
     };
 
@@ -311,6 +394,22 @@ export class HTable extends Widget implements SingleData {
       return acc;
     }, []);
 
+    const h_width = columns.reduce((acc, item, index, arr) => {
+      const isFirst = index === 0;
+      const isOnce = arr.length === 1;
+      const length = item.cols.length;
+
+      if (isOnce || isFirst) {
+        acc[index] = contentWidth / length;
+      } else {
+        acc[index] = acc[index - 1] / length;
+      }
+
+      return acc;
+    }, {});
+
+    const h_lastColsWidth = Object.values(h_width).reverse()[0];
+
     const h_columns = labels.reduce((acc, label) => {
       const labelArr = label.split('__');
 
@@ -332,9 +431,11 @@ export class HTable extends Widget implements SingleData {
 
             ref.push({
               title: name,
+              key: slug,
               dataIndex: slug,
               align: 'right',
               ...(isLast && {
+                width: h_lastColsWidth,
                 sorter: (a, b) =>
                   sort(a[slug], b[slug], valuesNameToType[name] !== 'number'),
               }),
@@ -368,11 +469,11 @@ export class HTable extends Widget implements SingleData {
         const valName = labelArr.pop();
         const valPath = valuesNameToPath[valName];
         const valType = valuesNameToType[valName];
+        const valIsNew = valPath.includes('col_new_');
+        const valColor = valIsNew ? valuesSlugToColor[toSlug(valName)] : {};
+
         const valHideLevel = settings[`HideValue_${valPath}`];
         const valHideLevelExist = typeof valHideLevel !== 'undefined';
-
-        console.log('valHideLevel >>', valHideLevel, level);
-        
 
         const items = columnsPaths.reduce(
           (itemsAcc, path, pathIndex) =>
@@ -382,9 +483,11 @@ export class HTable extends Widget implements SingleData {
 
         if (
           (items.length && !valHideLevelExist) ||
-          (valHideLevelExist && level > valHideLevel)
+          (items.length && valHideLevelExist && level >= +valHideLevel)
         ) {
           let value = items[0][valPath];
+          let valuePercent = 1;
+          let isValue = false;
 
           if (valType === 'number') {
             value = items.reduce(
@@ -392,15 +495,35 @@ export class HTable extends Widget implements SingleData {
               0,
             );
 
-            value = this.toDigital(value);
+            if (getIsValue(value, newValsPlus.includes(valPath))) {
+              isValue = true;
+
+              valuePercent =
+                valIsNew && value <= valColor.max && value >= valColor.min
+                  ? Math.round((value * 100) / valColor.max)
+                  : 100;
+              value = this.toDigital(value);
+            }
           }
 
-          if (level === 0 && colsTotals && pagination)
-            totalRowPagGen(lvlRowIndex, slug, value);
+          if (isValue) {
+            if (level === 0 && colsTotals && pagination)
+              totalRowPagGen(lvlRowIndex, slug, value);
 
-          if (level !== lastLevel) value = toStrong(value);
+            const color = valIsNew ? valColor.colors[valuePercent] : '';
+            const isStrong = level !== lastLevel;
 
-          data[slug] = value;
+            value =
+              valIsNew && valColor.isTag && color
+                ? toTag(value, color, isStrong)
+                : isStrong
+                ? toStrong(value)
+                : value;
+
+            data[slug] = value;
+          } else {
+            data[slug] = '';
+          }
         } else {
           data[slug] = '';
         }
@@ -413,7 +536,7 @@ export class HTable extends Widget implements SingleData {
 
     const filteredRows = this.getFilteredRows(rows, rowsPaths);
 
-    const h_rows = rows.reduceRight((acc, row, index, arr) => {
+    let h_rows = rows.reduceRight((acc, row, index, arr) => {
       const isFirst = index === arr.length - 1;
       const isOnce = arr.length === 1;
       const prevLvl = [...acc];
@@ -425,24 +548,32 @@ export class HTable extends Widget implements SingleData {
         const filtered = filteredRows[index][rowName];
         const isRight = (!isFirst && !isOnce) || isOnce;
 
-        if (index < defaultOpenLvl) this.defaultOpen.push(key);
+        if (!defaultExpandAllRows && index < defaultOpenLvl) {
+          this.defaultOpen.push(key);
+        }
 
         acc.push({
           key: key,
           name: rowName,
           ...(!isFirst && {
             children: prevLvl.reduce((prevAcc, child) => {
+              const newKey = getKey();
               const prevFiltered = filter(
                 filtered,
                 child.name,
-                arr[index + 1].paths[rowIndex],
+                arr[index + 1].paths[0],
               );
 
               if (prevFiltered.length) {
                 prevAcc.push({
                   ...child,
                   ...setRowData(prevFiltered, index + 1),
+                  key: newKey,
                 });
+
+                if (!defaultExpandAllRows && index + 1 < defaultOpenLvl) {
+                  this.defaultOpen.push(newKey);
+                }
               }
 
               return prevAcc;
@@ -458,7 +589,7 @@ export class HTable extends Widget implements SingleData {
     if (allTotals) {
       totalRow = {
         ...totalRow,
-        total: toStrong(this.toDigital(allT * 2), { className: 'total' }),
+        total: this.toTotal(allT * 2),
       };
     }
 
@@ -481,9 +612,7 @@ export class HTable extends Widget implements SingleData {
 
             const newItem = Object.keys(item).reduce((acc, key) => {
               const value = item[key];
-              acc[key] = toStrong(this.toDigital(value), {
-                className: 'total',
-              });
+              acc[key] = this.toTotal(value);
               total += value;
 
               return acc;
@@ -493,9 +622,7 @@ export class HTable extends Widget implements SingleData {
               name: 'Всего',
               key: getKey(),
               ...(allTotals && {
-                total: toStrong(this.toDigital(total * 2), {
-                  className: 'total',
-                }),
+                total: this.toTotal(total * 2),
               }),
               ...newItem,
             };
@@ -512,12 +639,40 @@ export class HTable extends Widget implements SingleData {
       }
     }
 
+    const getTableWidth = () => {
+      const minWidth = 720;
+      let result = 0;
+
+      result += firstColWidth;
+
+      result += contentWidth;
+      //
+      if (colsTotals) result += totalColWidth;
+
+      return result < minWidth ? minWidth : result;
+    };
+
+    if (defaultExpandAllRows) {
+      h_rows = createDeepCopy(h_rows);
+      let rowIndex = 0;
+      const changeKeys = (rows) => {
+        rows.forEach((row) => {
+          row.key = rowIndex;
+          rowIndex++;
+          if (row.children) changeKeys(row.children);
+        });
+      };
+
+      changeKeys(h_rows);
+    }
+
     const dataset = {
       columns: h_columns,
       dataSource: h_rows,
       options: {
         theme: 'default',
         anywhere: false,
+        defaultExpandAllRows: defaultExpandAllRows,
         defaultExpandedRowKeys: this.defaultOpen,
         pagination: pagination && {
           pageSize: colsTotals ? pageSize + 1 : pageSize,
@@ -525,7 +680,7 @@ export class HTable extends Widget implements SingleData {
             rows[0].rows.length +
             (colsTotals ? Math.ceil(rows[0].rows.length / pageSize) : 0),
         },
-        tableWidth: 1900,
+        tableWidth: getTableWidth(),
         rowTotalFixed: colsTotals && rowTotalFixed,
         rowTotalV: rowTotalV,
       },
@@ -533,7 +688,7 @@ export class HTable extends Widget implements SingleData {
 
     this.filteredData = dataset;
 
-    console.log('<< dataset >>', dataset);
+    // console.log('<< dataset >>', dataset);
 
     return dataset;
   };

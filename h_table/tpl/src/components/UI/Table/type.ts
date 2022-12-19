@@ -30,6 +30,7 @@ export interface IState {
   options: {
     theme: string;
     anywhere: boolean;
+    defaultExpandAllRows: boolean;
     defaultExpandedRowKeys: Key[];
     pagination: false | TablePaginationConfig;
     tableWidth: number | string;

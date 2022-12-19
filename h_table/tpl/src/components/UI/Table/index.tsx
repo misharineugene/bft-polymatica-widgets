@@ -46,7 +46,10 @@ const Table: FC<TableProps> = ({ state }) => {
       <AntdTable
         dataSource={dataSource}
         columns={columns}
-        defaultExpandedRowKeys={options.defaultExpandedRowKeys}
+        defaultExpandAllRows={options.defaultExpandAllRows}
+        {...(!options.defaultExpandAllRows && {
+          defaultExpandedRowKeys: options.defaultExpandedRowKeys,
+        })}
         locale={{ emptyText: <Empty description="Нет данных" /> }}
         //
         bordered

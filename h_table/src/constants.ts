@@ -24,3 +24,10 @@ export const showTotalPaging = [
   ['sub', 'Итог страницы', 'Page total'],
   ['all', 'Общий итог', 'Grand total'],
 ];
+
+export const newVals = [
+  ['0', '0', '0'],
+  ['1', '1', '1'],
+  ['2', '2', '2'],
+  ['3', '3', '3'],
+];
