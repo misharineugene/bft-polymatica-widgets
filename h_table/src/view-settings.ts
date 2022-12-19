@@ -10,12 +10,19 @@ import { DataSettings, ViewSettings } from 'ptnl-constructor-sdk';
 //
 import { EBlockKey, EViewKey } from './enum';
 import {
+  newVals,
   showTotal,
   showTotalH,
   showTotalPaging,
   showTotalV,
 } from './constants';
-import { getBlockLabel, getHR, getSelectItems } from './utils';
+import {
+  getBlockLabel,
+  getHR,
+  getValuesNew,
+  getSelectItems,
+  getValuesHideSelect,
+} from './utils';
 
 export const createViewSettings: CreateViewSettings<DataSettings> = ({
   dataSettings,
@@ -25,7 +32,19 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
   viewSettings: ViewSettings;
 }) => {
   const { columnsByBlock } = dataSettings;
-  const rows = columnsByBlock[EBlockKey.ROWS];
+  //
+  const rowsBlock = columnsByBlock[EBlockKey.ROWS];
+  const valuesBlock = columnsByBlock[EBlockKey.VALUES];
+  const valuesHideBlock = columnsByBlock[EBlockKey.VALUES_HIDE];
+  //
+  const valuesHideSelect = getValuesHideSelect(rowsBlock);
+  const newValsCount = viewSettings[EViewKey.newValsCount];
+  //
+  const valuesNew = getValuesNew(
+    typeof newValsCount !== 'undefined' ? +newValsCount : 1,
+    valuesBlock,
+    valuesHideSelect,
+  );
 
   return [
     input({
@@ -52,8 +71,15 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
         ru: 'Разворачивание уровней',
         en: 'Hierarchy display by default',
       },
-      options: rows.map((_, index) => {
-        const label = index === 0 ? 'Не разворачивать' : index.toString();
+      options: rowsBlock.map((_, index, arr) => {
+        const isFirst = index === 0;
+        const isLast = index === arr.length - 1;
+        const isOnce = isFirst && isLast;
+        let label =
+          isFirst || isOnce
+            ? 'Не разворачивать'
+            : 'до ' + (index + 1).toString();
+        label = isLast && !isOnce ? label + ' (Все уровни)' : label;
 
         return {
           label: {
@@ -64,6 +90,23 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
         };
       }),
       defaultValue: '0',
+    }),
+    //
+    checkbox({
+      key: EViewKey.Digital,
+      label: {
+        ru: 'Включить разрядность значений',
+        en: 'Enable Value Digital',
+      },
+      defaultValue: true,
+    }),
+    input({
+      key: EViewKey.DigitalNum,
+      label: {
+        ru: 'Разрядность значений',
+        en: 'Digital of values',
+      },
+      defaultValue: '2',
     }),
     //
     getHR(getBlockLabel('Итоги', 'Totals')),
@@ -120,6 +163,14 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
       options: showTotalPaging.map(getSelectItems),
       defaultValue: showTotalPaging[0][0],
     }),
+    checkbox({
+      key: EViewKey.TotalTag,
+      label: {
+        ru: 'Подсветка значений с итогами',
+        en: 'Showing Totals (With pagination)',
+      },
+      defaultValue: true,
+    }),
     //
     getHR(getBlockLabel('Пагинация', 'Pagination')),
     //
@@ -140,34 +191,58 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
       defaultValue: '10',
     }),
     //
+    getHR(getBlockLabel('Ширина колонок (px)', 'Column Width (px)')),
+    //
+    input({
+      key: EViewKey.FirstColWidth,
+      label: {
+        ru: 'Ширина столбца с Иерархией',
+        en: 'Column width with Hierarchy',
+      },
+      defaultValue: '350',
+    }),
+    input({
+      key: EViewKey.ContentWidth,
+      label: {
+        ru: `Ширина контента`,
+        en: `Content width`,
+      },
+      defaultValue: '500',
+    }),
+    input({
+      key: EViewKey.TotalColWidth,
+      label: {
+        ru: 'Ширина столбца с Итогами',
+        en: 'Column width with totals',
+      },
+      defaultValue: '200',
+    }),
+    //
     getHR(getBlockLabel('Показатели', 'Indicators')),
     //
-    ...columnsByBlock[EBlockKey.VALUES_HIDE].map((valueBlock) => {
+    ...valuesHideBlock.map((valueBlock) => {
       return select({
         key: `HideValue_${valueBlock.path}`,
         label: {
           ru: `Отображать показатель "${valueBlock.name}" на уровне`,
           en: `Display indicator "${valueBlock.name}" on level`,
         },
-        options: rows.map((_, index) => {
-          const isFirst = index === 0;
-          const revIdx = rows.length - 1 - index;
-          const value = revIdx.toString();
-          //
-          let label = (revIdx + 1).toString();
-          label = isFirst ? label : label + ' — ' + rows.length;
-
-          return {
-            label: {
-              ru: label,
-              en: label,
-            },
-            value: value,
-          };
-        }),
-        defaultValue: (rows.length - 1).toString(),
+        options: valuesHideSelect.options,
+        defaultValue: valuesHideSelect.defaultValue,
       });
     }),
+    //
+    select({
+      key: EViewKey.newValsCount,
+      label: {
+        ru: 'Кол-во новых показателей',
+        en: 'Number of new indicators',
+      },
+      options: newVals.map(getSelectItems),
+      defaultValue: newVals[1][0],
+    }),
+    //
+    ...valuesNew.flat(),
   ];
 };
 

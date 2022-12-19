@@ -1,6 +1,13 @@
-import { select } from 'ptnl-constructor-sdk/config';
+import {
+  checkbox,
+  colorPicker,
+  input,
+  select,
+} from 'ptnl-constructor-sdk/config';
 import React from 'react';
 import { hrs } from './constants';
+import { EViewKey } from './enum';
+import Color from 'color';
 
 export const toSlug = (string) => {
   const translate = {
@@ -84,6 +91,10 @@ export const getKey = () => {
   return ((Number(random()) * Number(random())) / Number(random())).toString();
 };
 //
+export const getIsValue = (value, plus = false) => {
+  return plus ? isFinite(value) && value >= 0 : isFinite(value);
+};
+//
 export const getChildrenByLevel = (obj, level) => {
   let ref = obj.children;
 
@@ -137,6 +148,17 @@ export const toStrong = (value, extraProps?) => {
   });
 };
 //
+export const toTag = (value, color, isStrong = false) => {
+  return React.createElement('span', {
+    children: value,
+    className: isStrong ? 'tag strong' : 'tag',
+    style: {
+      backgroundColor: color,
+      borderColor: Color(color).darken(0.5).hex(),
+    },
+  });
+};
+//
 export const getChild = (element) => {
   let result = '';
 
@@ -174,7 +196,7 @@ export const getBlockLabel = (ru, en) => {
 
   return [['hr', ruSide + ru + ruSide, enSide + en + enSide]];
 };
-
+//
 export const getHR = (name?) => {
   return select({
     key: 'Horizontal',
@@ -182,4 +204,238 @@ export const getHR = (name?) => {
     options: (name || hrs).map(getSelectItems),
     defaultValue: (name || hrs)[0][0],
   });
+};
+//
+export const getValuesHideSelect = (rowsBlock) => {
+  const rowsBlockLength = rowsBlock.length;
+  //
+  return {
+    options: rowsBlock.map((_, index) => {
+      const isFirst = index === 0;
+      const isLast = index === rowsBlockLength - 1;
+      const isOnce = rowsBlockLength === 1;
+      const revIdx = rowsBlockLength - 1 - index;
+      const value = revIdx.toString();
+      //
+      let label = (revIdx + 1).toString();
+      label = isFirst
+        ? label + (isOnce ? '' : ' (Последний уровень)')
+        : label + ' — ' + rowsBlockLength;
+      label = isLast && !isOnce ? label + ' (Все уровни)' : label;
+
+      return {
+        label: {
+          ru: label,
+          en: label,
+        },
+        value: value,
+      };
+    }),
+    defaultValue: (rowsBlockLength - 1).toString(),
+  };
+};
+//
+export const getValuesNew = (count, values, valuesHideSelect) => {
+  const newVals = new Array(count).fill([]);
+  //
+  const defFormula = values.splice(0, 2).map((valBlock) => {
+    return valBlock.name;
+  });
+
+  for (let i = 0; i < count; i++) {
+    const index = i + 1;
+    //
+    newVals[i] = [
+      getHR(
+        getBlockLabel(
+          `Новый показатель (${index})`,
+          `New indicator (${index})`,
+        ),
+      ),
+      //
+      input({
+        key: EViewKey['newValName_' + i],
+        label: {
+          ru: `Название`,
+          en: `Name`,
+        },
+        defaultValue: 'Процент %',
+      }),
+      input({
+        key: EViewKey['newValFormula_' + i],
+        label: {
+          ru: `Формула`,
+          en: `Formula`,
+        },
+        defaultValue: defFormula.join(' / ') + ' * 100',
+      }),
+      checkbox({
+        key: EViewKey['newValTotal_' + i],
+        label: {
+          ru: `Не рассчитывать итоги`,
+          en: `Don't calculate totals`,
+        },
+        defaultValue: false,
+      }),
+      select({
+        key: 'HideValue_col_new_' + i,
+        label: {
+          ru: `Отображать показатель на уровне`,
+          en: `Display indicator on level`,
+        },
+        options: valuesHideSelect.options,
+        defaultValue: '0',
+      }),
+      checkbox({
+        key: EViewKey['newValColor_' + i],
+        label: {
+          ru: 'Подсветка значений',
+          en: 'Highlight values',
+        },
+        defaultValue: false,
+      }),
+      colorPicker({
+        key: EViewKey['newValColorMax_' + i],
+        label: {
+          ru: `Цвет ячеек (Наибольшее число для окрашивания)`,
+          en: `Cell color (The largest number for staining)`,
+        },
+        defaultValue: 'green',
+      }),
+      input({
+        key: EViewKey['newValColorThr_' + i],
+        label: {
+          ru: `Формула (Наибольшее число > Порог > Наименьшее число)`,
+          en: `Formula (Highest number > Threshold > Lowest number)`,
+        },
+        defaultValue: '100 > 50 > 0',
+      }),
+      colorPicker({
+        key: EViewKey['newValColorMin_' + i],
+        label: {
+          ru: `Цвет ячеек (Наименьшее число для окрашивания)`,
+          en: `Cell сolor (Least number to color)`,
+        },
+        defaultValue: 'red',
+      }),
+    ];
+  }
+
+  return newVals;
+};
+//
+export const calculate = (string) => {
+  const arr = string
+    .replace(/ \+ /gi, '__+__')
+    .replace(/ - /gi, '__-__')
+    .replace(/ \* /gi, '__*__')
+    .replace(/ \/ /gi, '__/__')
+    .split('__');
+  const signs = ['+', '-', '*', '/'];
+
+  let result = 0;
+
+  if (arr.find((val) => !signs.includes(val) && isNaN(+val))) {
+    return NaN;
+  }
+
+  for (let i = 0; i < arr.length; i++) {
+    if (i === 0) {
+      result = +arr[i];
+    }
+
+    if (
+      (arr[i] === '0' && arr[i + 1] === '/') ||
+      (arr[i] === '/' && arr[i - 1] === '0')
+    ) {
+      result = 0;
+      continue;
+    }
+
+    switch (arr[i]) {
+      case '+':
+        result += +arr[i + 1];
+        break;
+      case '-':
+        result -= +arr[i + 1];
+        break;
+      case '/':
+        result /= +arr[i + 1];
+        break;
+      case '*':
+        result *= +arr[i + 1];
+        break;
+    }
+  }
+
+  return result;
+};
+//
+export const getRangeColor = (isTag, colors, range) => {
+  const newColors = {};
+  const [colorMin, colorMax] = colors;
+  const [max, porog, min] = range.split(' > ');
+
+  if (isTag) {
+    const percent = (max - min) / 100;
+
+    const minPercent = Math.round((porog - min) / percent);
+    const maxPercent = Math.round((max - porog) / percent);
+
+    const minColors = new Array(minPercent).fill('');
+    const maxColors = new Array(maxPercent).fill('');
+
+    const minLighten = 100 - minPercent > 25 ? 0.0025 : 0.0075;
+    const maxLighten = 100 - maxPercent > 25 ? 0.005 : 0.0075;
+
+    minColors.forEach((_, index) => {
+      const isFirst = index === 0;
+      minColors[index] = isFirst
+        ? Color(colorMin).hex()
+        : Color(minColors[index - 1])
+            .lighten(minLighten)
+            .hex();
+    });
+
+    maxColors.forEach((_, index) => {
+      const isFirst = index === 0;
+      maxColors[index] = isFirst
+        ? Color(colorMax).hex()
+        : Color(maxColors[index - 1])
+            .lighten(maxLighten)
+            .hex();
+    });
+
+    minColors.forEach((color, index) => {
+      newColors[index] = color;
+    });
+
+    maxColors.reverse().forEach((color, index) => {
+      newColors[minColors.length + index] = color;
+    });
+  }
+
+  return {
+    isTag,
+    colors: newColors,
+    max,
+    porog,
+    min,
+  };
+};
+
+export const createDeepCopy = (input) => {
+  if (input instanceof Date) {
+    return new Date(input.getTime());
+  }
+  if (typeof input !== 'object') {
+    return input;
+  }
+  let copy = Array.isArray(input) ? [] : {};
+  for (let key in input) {
+    const value = input[key];
+    copy[key] = createDeepCopy(value);
+  }
+
+  return copy;
 };

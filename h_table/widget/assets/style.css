@@ -10,7 +10,9 @@ body {
   color: var(--text-tint-0);
 }
 
-.ant-table-cell strong {
+.ant-table-cell strong,
+.ant-table-cell .strong {
+  font-weight: 700;
   color: #111;
 }
 
@@ -22,4 +24,13 @@ body {
 .ant-table-cell strong.total {
   font-weight: 900;
   color: #000;
+}
+
+.ant-table-cell .tag {
+  display: inline-block;
+  padding: 0 7px;
+  /*  */
+  background-color: #d1d5db;
+  border: 1px solid #9ca3af;
+  border-radius: 4px;
 }
