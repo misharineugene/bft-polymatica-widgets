@@ -10,6 +10,7 @@ import {
   calculate,
   getColumn,
   getRangeColor,
+  getIsValue,
 } from './utils';
 
 @Declare({
@@ -102,7 +103,7 @@ export class Compare extends Widget implements SingleData {
     newVals.forEach((valItem, index) => {
       if (valItem.add) {
         const formula = valItem.formula.toLowerCase();
-        const formula_arr = formula.split(/\ + | - | \* | \/ /g);
+        const formula_arr = formula.split(/ \+ | - | \* | \/ /g);
         const path = 'col_new_' + index;
         //
         let formulaL = formula;
@@ -174,21 +175,35 @@ export class Compare extends Widget implements SingleData {
         changeColorThr,
       );
       //
-      const changeValue = this.data.reduce((acc, dataItem) => {
-        return (acc += dataItem['col_new_0']);
-      }, 0);
-      //
-      const valuePercent = Math.round((changeValue * 100) / changeColors.max);
-      const currentColor = changeColors.colors[valuePercent];
+      let changeValue = this.data[0]['col_new_0'];
+
+      this.data.reduce((acc, dataItem, dataIndex) => {
+        if (dataIndex === 0) return acc;
+        //
+        const value = dataItem['col_new_0'];
+        if (getIsValue(value)) {
+          return (acc += value);
+        }
+        return acc;
+      }, changeValue);
       //
       let style = '';
-      if (currentColor) {
-        style = `color: ${currentColor}`;
+      if (getIsValue(changeValue)) {
+        const valuePercent = Math.abs(
+          Math.round((changeValue * 100) / changeColors.max),
+        );
+        const currentColor = changeColors.colors[valuePercent];
+        //
+        if (currentColor) {
+          style = `color: ${currentColor}`;
+        }
       }
 
       root.innerHTML += getColumn(
         changeName,
-        (changeValue > 0 ? '+' : '') + this.toDigital(changeValue),
+        getIsValue(changeValue)
+          ? (changeValue > 0 ? '+' : '') + this.toDigital(changeValue)
+          : '',
         style,
       );
     }
@@ -203,23 +218,36 @@ export class Compare extends Widget implements SingleData {
         executionColorThr,
       );
       //
-      const executionValue = this.data.reduce((acc, dataItem) => {
-        return (acc += dataItem['col_new_1']);
-      }, 0);
-      //
-      const valuePercent = Math.round(
-        (executionValue * 100) / executionColors.max,
-      );
-      const currentColor = executionColors.colors[valuePercent];
+      let executionValue = this.data[0]['col_new_1'];
+      this.data.reduce((acc, dataItem, dataIndex) => {
+        if (dataIndex === 0) return acc;
+        //
+        const value = dataItem['col_new_1'];
+        if (getIsValue(value)) {
+          return (acc += value);
+        }
+        return acc;
+      }, executionValue);
       //
       let style = '';
-      if (currentColor) {
-        style = `color: ${currentColor}`;
+      if (getIsValue(executionValue)) {
+        const valuePercent = Math.abs(
+          Math.round((executionValue * 100) / executionColors.max),
+        );
+        const currentColor = executionColors.colors[valuePercent];
+        //
+        if (currentColor) {
+          style = `color: ${currentColor}`;
+        }
       }
 
       root.innerHTML += getColumn(
         executionName,
-        (executionValue > 0 ? '+' : '') + this.toDigital(executionValue) + '%',
+        getIsValue(executionValue)
+          ? (executionValue > 0 ? '+' : '') +
+              this.toDigital(executionValue) +
+              '%'
+          : '',
         style,
       );
     }
@@ -235,24 +263,37 @@ export class Compare extends Widget implements SingleData {
         rateOfIncreaseColorThr,
       );
       //
-      const rateOfIncreaseValue = this.data.reduce((acc, dataItem) => {
-        return (acc += dataItem['col_new_2']);
-      }, 0);
-      //
-      const valuePercent = Math.round(
-        (rateOfIncreaseValue * 100) / rateOfIncreaseColors.max,
-      );
-      const currentColor = rateOfIncreaseColors.colors[valuePercent];
+      let rateOfIncreaseValue = this.data[0]['col_new_2'];
+
+      this.data.reduce((acc, dataItem, dataIndex) => {
+        if (dataIndex === 0) return acc;
+        //
+        const value = dataItem['col_new_2'];
+        if (getIsValue(value)) {
+          return (acc += value);
+        }
+        return acc;
+      }, rateOfIncreaseValue);
       //
       let style = '';
-      if (currentColor) {
-        style = `color: ${currentColor}`;
+      if (getIsValue(rateOfIncreaseValue)) {
+        const valuePercent = Math.abs(
+          Math.round((rateOfIncreaseValue * 100) / rateOfIncreaseColors.max),
+        );
+        const currentColor = rateOfIncreaseColors.colors[valuePercent];
+        //
+        if (currentColor) {
+          style = `color: ${currentColor}`;
+        }
       }
 
       root.innerHTML += getColumn(
         rateOfIncreaseName,
-        (rateOfIncreaseValue > 0 ? '+' : '') +
-          this.toDigital(rateOfIncreaseValue) + '%',
+        getIsValue(rateOfIncreaseValue)
+          ? (rateOfIncreaseValue > 0 ? '+' : '') +
+              this.toDigital(rateOfIncreaseValue) +
+              '%'
+          : '',
         style,
       );
     }

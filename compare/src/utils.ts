@@ -156,9 +156,19 @@ export const getHR = (name?) => {
 };
 //
 export const calculate = (string) => {
-  const arr = string.split(' ');
+  const arr = string
+    .replace(/ \+ /gi, '__+__')
+    .replace(/ - /gi, '__-__')
+    .replace(/ \* /gi, '__*__')
+    .replace(/ \/ /gi, '__/__')
+    .split('__');
+  const signs = ['+', '-', '*', '/'];
 
   let result = 0;
+
+  if (arr.find((val) => !signs.includes(val) && isNaN(+val))) {
+    return NaN;
+  }
 
   for (let i = 0; i < arr.length; i++) {
     if (i === 0) {
@@ -167,32 +177,24 @@ export const calculate = (string) => {
 
     if (
       (arr[i] === '0' && arr[i + 1] === '/') ||
-      (arr[i] === '/' && arr[i + 1] === '0')
+      (arr[i] === '/' && arr[i - 1] === '0')
     ) {
-      result = +0;
-
+      result = 0;
       continue;
     }
 
     switch (arr[i]) {
       case '+':
         result += +arr[i + 1];
-        ++i;
         break;
-
       case '-':
         result -= +arr[i + 1];
-        ++i;
         break;
-
       case '/':
         result /= +arr[i + 1];
-        ++i;
         break;
-
       case '*':
         result *= +arr[i + 1];
-        ++i;
         break;
     }
   }
@@ -254,4 +256,8 @@ export const getRangeColor = (colors, range) => {
     porog,
     min,
   };
+};
+
+export const getIsValue = (value, plus = false) => {
+  return plus ? isFinite(value) && value >= 0 : isFinite(value);
 };
