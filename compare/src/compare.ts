@@ -164,8 +164,16 @@ export class Compare extends Widget implements SingleData {
       return (acc += dataItem[columnsByBlock[EBlockKey.VALUE_2][0].path]);
     }, 0);
     root.innerHTML += getColumn(value2Name, this.toDigital(value2));
-    //
-    if (settings[EViewKey.IsChange]) {
+    // 
+    const nameToValue = {
+      [columnsByBlock[EBlockKey.VALUE_1][0].name.toLowerCase()]: value1,
+      [columnsByBlock[EBlockKey.VALUE_2][0].name.toLowerCase()]: value2,
+      [settings[EViewKey.ChangeName].toLowerCase()]: 0,
+      [settings[EViewKey.ExecutionName].toLowerCase()]: 0,
+      [settings[EViewKey.RateOfIncreaseName].toLowerCase()]: 0,
+    }
+    ////////////////////////////////
+    if (settings[EViewKey.IsChange]) {      
       const changeName = settings[EViewKey.ChangeName];
       const changeColorMax = settings[EViewKey.ChangeColorMax];
       const changeColorThr = settings[EViewKey.ChangeColorThr];
@@ -175,17 +183,13 @@ export class Compare extends Widget implements SingleData {
         changeColorThr,
       );
       //
-      let changeValue = this.data[0]['col_new_0'];
-
-      this.data.reduce((acc, dataItem, dataIndex) => {
-        if (dataIndex === 0) return acc;
-        //
-        const value = dataItem['col_new_0'];
-        if (getIsValue(value)) {
-          return (acc += value);
-        }
-        return acc;
-      }, changeValue);
+      let formula = settings[EViewKey.ChangeFormula].toLowerCase();
+      Object.entries(nameToValue).forEach(entry => {
+        const  [key, value] = entry;
+        formula = formula.replace(key, value);
+      });
+      nameToValue[changeName.toLowerCase()] = calculate(formula);
+      const changeValue = nameToValue[changeName.toLowerCase()];
       //
       let style = '';
       if (getIsValue(changeValue)) {
@@ -207,7 +211,7 @@ export class Compare extends Widget implements SingleData {
         style,
       );
     }
-    //
+    ////////////////////////////////
     if (settings[EViewKey.IsExecution]) {
       const executionName = settings[EViewKey.ExecutionName];
       const executionColorMax = settings[EViewKey.ExecutionColorMax];
@@ -218,16 +222,13 @@ export class Compare extends Widget implements SingleData {
         executionColorThr,
       );
       //
-      let executionValue = this.data[0]['col_new_1'];
-      this.data.reduce((acc, dataItem, dataIndex) => {
-        if (dataIndex === 0) return acc;
-        //
-        const value = dataItem['col_new_1'];
-        if (getIsValue(value)) {
-          return (acc += value);
-        }
-        return acc;
-      }, executionValue);
+      let formula = settings[EViewKey.ExecutionFormula].toLowerCase();
+      Object.entries(nameToValue).forEach(entry => {
+        const  [key, value] = entry;
+        formula = formula.replace(key, value);
+      });
+      nameToValue[executionName.toLowerCase()] = calculate(formula);
+      const executionValue = nameToValue[executionName.toLowerCase()];
       //
       let style = '';
       if (getIsValue(executionValue)) {
@@ -251,7 +252,7 @@ export class Compare extends Widget implements SingleData {
         style,
       );
     }
-    //
+    ////////////////////////////////
     if (settings[EViewKey.IsRateOfIncrease]) {
       const rateOfIncreaseName = settings[EViewKey.RateOfIncreaseName];
       //
@@ -263,17 +264,13 @@ export class Compare extends Widget implements SingleData {
         rateOfIncreaseColorThr,
       );
       //
-      let rateOfIncreaseValue = this.data[0]['col_new_2'];
-
-      this.data.reduce((acc, dataItem, dataIndex) => {
-        if (dataIndex === 0) return acc;
-        //
-        const value = dataItem['col_new_2'];
-        if (getIsValue(value)) {
-          return (acc += value);
-        }
-        return acc;
-      }, rateOfIncreaseValue);
+      let formula = settings[EViewKey.RateOfIncreaseFormula].toLowerCase();
+      Object.entries(nameToValue).forEach(entry => {
+        const  [key, value] = entry;
+        formula = formula.replace(key, value);
+      });
+      nameToValue[rateOfIncreaseName.toLowerCase()] = calculate(formula);
+      const rateOfIncreaseValue = nameToValue[rateOfIncreaseName.toLowerCase()];
       //
       let style = '';
       if (getIsValue(rateOfIncreaseValue)) {
