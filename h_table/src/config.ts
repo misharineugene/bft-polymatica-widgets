@@ -67,6 +67,15 @@ export const config: Config = {
         },
         columnTypes: [ColumnType.Number],
       }),
+      block({
+        key: EBlockKey.VALUES_NO_SHOW,
+        dataQueryFunction: DataQueryFunction.Sum,
+        label: {
+          ru: 'Показатели скрытые',
+          en: 'Indicators Indicators hidden',
+        },
+        columnTypes: [ColumnType.Number],
+      }),
       filter(),
       sort(),
       drilldown({

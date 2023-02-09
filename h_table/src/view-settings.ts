@@ -38,10 +38,11 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
   const valuesHideBlock = columnsByBlock[EBlockKey.VALUES_HIDE];
   //
   const valuesHideSelect = getValuesHideSelect(rowsBlock);
-  const newValsCount = viewSettings[EViewKey.newValsCount];
+  // const newValsCount = viewSettings[EViewKey.newValsCount];
   //
   const valuesNew = getValuesNew(
-    typeof newValsCount !== 'undefined' ? +newValsCount : 1,
+    // typeof newValsCount !== 'undefined' ? +newValsCount : 1,
+    3,
     valuesBlock,
     valuesHideSelect,
   );
@@ -169,7 +170,7 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
         ru: 'Подсветка значений с итогами',
         en: 'Showing Totals (With pagination)',
       },
-      defaultValue: true,
+      defaultValue: false,
     }),
     //
     getHR(getBlockLabel('Пагинация', 'Pagination')),
@@ -232,15 +233,15 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
       });
     }),
     //
-    select({
-      key: EViewKey.newValsCount,
-      label: {
-        ru: 'Кол-во новых показателей',
-        en: 'Number of new indicators',
-      },
-      options: newVals.map(getSelectItems),
-      defaultValue: newVals[1][0],
-    }),
+    // select({
+    //   key: EViewKey.newValsCount,
+    //   label: {
+    //     ru: 'Кол-во новых показателей',
+    //     en: 'Number of new indicators',
+    //   },
+    //   options: newVals.map(getSelectItems),
+    //   defaultValue: newVals[1][0],
+    // }),
     //
     ...valuesNew.flat(),
   ];

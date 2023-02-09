@@ -47,6 +47,7 @@ export const toSlug = (string) => {
   };
 
   return string
+    .toString()
     .toLowerCase()
     .replace(/\s/g, '')
     .split('')
@@ -63,7 +64,7 @@ export const toNumber = (value): number => {
 export const unique = (arr: string[]) => Array.from(new Set(arr));
 //
 export const filter = (arr, value, key?) =>
-  arr.filter((item) => (key ? item[key] === value : item === value));
+  arr.filter((item) => (key ? item[key] == value : item == value));
 //
 export const sort = (a, b, isStrings?) => {
   const typeA = typeof a;
@@ -252,6 +253,15 @@ export const getValuesNew = (count, values, valuesHideSelect) => {
           `New indicator (${index})`,
         ),
       ),
+      // 
+      checkbox({
+        key: EViewKey['newValAdd_' + i],
+        label: {
+          ru: `Добавить показатель`,
+          en: `Add a indicator`,
+        },
+        defaultValue: false,
+      }),
       //
       input({
         key: EViewKey['newValName_' + i],
@@ -423,7 +433,7 @@ export const getRangeColor = (isTag, colors, range) => {
     min,
   };
 };
-
+// 
 export const createDeepCopy = (input) => {
   if (input instanceof Date) {
     return new Date(input.getTime());
