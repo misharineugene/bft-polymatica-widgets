@@ -140,9 +140,15 @@ export class HTable extends Widget implements SingleData {
     let nameColumn = {
       title: createElement(Fragment, {
         children: [
-          createElement('span', { children: firstColName }),
+          createElement('span', {
+            children: firstColName,
+            style: { marginBottom: -15 },
+          }),
           createElement('span', { style: { width: 32 } }),
-          createElement('span', { children: 'Показатель' }),
+          createElement('span', {
+            children: 'Показатель',
+            style: { marginTop: -15 },
+          }),
         ],
       }),
       dataIndex: 'name',
@@ -172,11 +178,14 @@ export class HTable extends Widget implements SingleData {
     const columnsBlock = columnsByBlock[EBlockKey.COLUMNS];
     const rowsBlock = columnsByBlock[EBlockKey.ROWS];
     const valuesBlock = columnsByBlock[EBlockKey.VALUES];
-    const valuesNoTotalBlock = columnsByBlock[EBlockKey.VALUES_NO_TOTAL];
+    const valuesNoShowBlock = columnsByBlock[EBlockKey.VALUES_NO_SHOW];
+    let valuesNoTotalBlock = columnsByBlock[EBlockKey.VALUES_NO_TOTAL];
+    valuesNoTotalBlock = [...valuesNoTotalBlock, ...valuesNoShowBlock];
     //
     const columnsPaths = columnsBlock.map((item) => item.path);
     const rowsPaths = rowsBlock.map((item) => item.path);
     const valuesPaths = valuesBlock.map((item) => item.path);
+    const valuesNoShowPaths = valuesNoShowBlock.map((item) => item.path);
     const valuesNoTotalPaths = valuesNoTotalBlock.map((item) => item.path);
     //
     const columnsNames = columnsBlock.map((item) => item.name);
@@ -194,12 +203,17 @@ export class HTable extends Widget implements SingleData {
       ...rowsPaths,
     ]);
     //
-    const newValsCount = +settings[EViewKey.newValsCount];
+    // const newValsCount = +settings[EViewKey.newValsCount];
+    // const newValsCount = 3;
     const newValsPlus = [];
+    const newVals = [{}, {}, {}];
+    let newValAdd = false;
     //
-    for (let i = 0; i < newValsCount; i++) {
-      let name = settings[EViewKey['newValName_' + i]];
-      if (typeof name !== 'undefined') {
+    newVals.forEach((valItem, i) => {
+      const add = settings[EViewKey['newValAdd_' + i]];
+
+      if (add) {
+        let name = settings[EViewKey['newValName_' + i]];
         const path = 'col_new_' + i;
         //
         if (name.includes('(+)')) {
@@ -228,6 +242,8 @@ export class HTable extends Widget implements SingleData {
         valuesSlugToType[slug] = 'number';
         valuesSlugToColor[slug] = colors;
 
+        newValAdd = true;
+
         if (totalHide) {
           valuesNoTotalPaths.push(path);
         }
@@ -237,16 +253,22 @@ export class HTable extends Widget implements SingleData {
 
         valuesNames.forEach((valName) => {
           formula_arr.forEach((item) => {
-            if (valName.toLowerCase() === item) {
+            if (valName.toString().toLowerCase() === item) {
               paths.push(valuesNameToPath[valName]);
             }
           });
 
           formulaL = formulaL.replace(
-            valName.toLowerCase(),
+            valName.toString().toLowerCase(),
             valuesNameToPath[valName],
           );
         });
+
+        valItem['add'] = add;
+        valItem['slug'] = slug;
+        valItem['path'] = path;
+        valItem['formula'] = formulaL;
+        valItem['formula_paths'] = paths;
 
         this.data.forEach((dataItem) => {
           let newFormula = formulaL;
@@ -257,7 +279,7 @@ export class HTable extends Widget implements SingleData {
           dataItem[path] = calculate(newFormula);
         });
       }
-    }
+    });
 
     const columns: colType[] = columnsPaths.map((pathItem, index) => {
       const cols = uniqueNamesByPath[pathItem];
@@ -299,6 +321,94 @@ export class HTable extends Widget implements SingleData {
           acc.push({
             name,
             data,
+          });
+        }
+      });
+    };
+
+    const newColRender = (row, level, lvlRowIndex?) => {
+      const rowKeys = Object.keys(row);
+
+      newVals.forEach((newVal) => {
+        if (newVal['add']) {
+          const newValSlug = newVal['slug'];
+          const newValPath = newVal['path'];
+          const newValPaths = newVal['formula_paths'];
+          const newValType = valuesSlugToType[newValSlug];
+          const newValColor = valuesSlugToColor[newValSlug];
+          const valHideLevel = settings[`HideValue_${newValPath}`];
+          const valHideLevelExist = typeof valHideLevel !== 'undefined';
+          //
+
+          const newValsKeys = rowKeys.filter((key) => key.includes(newValSlug));
+          const newValsStep = rowKeys.length / newValsKeys.length;
+
+          newValsKeys.forEach((newValKey, newValIndex) => {
+            let newValFormula = newVal['formula'];
+            if (
+              !valHideLevelExist ||
+              (valHideLevelExist && level >= +valHideLevel)
+            ) {
+              let value = toNumber(row[newValKey]);
+              let valuePercent = 1;
+              let isValue = false;
+
+              if (newValType === 'number') {
+                rowKeys
+                  .slice(
+                    newValIndex * newValsStep,
+                    (newValIndex + 1) * newValsStep,
+                  )
+                  .forEach((key) => {
+                    const valSlug = key.split('__').pop();
+                    const valPath = valuesSlugToPath[valSlug];
+                    const isSum =
+                      !valuesNoTotalPaths.includes(valPath) &&
+                      valuesSlugToType[valSlug] === 'number';
+
+                    newValPaths.forEach((pathItem) => {
+                      if (valPath === pathItem) {
+                        newValFormula = newValFormula.replace(
+                          pathItem,
+                          isSum ? toNumber(row[key]) : '',
+                        );
+                      }
+                    });
+                  });
+
+                value = calculate(newValFormula);
+
+                if (getIsValue(value, newValsPlus.includes(newValPath))) {
+                  isValue = true;
+
+                  valuePercent =
+                    value <= newValColor.max && value >= newValColor.min
+                      ? Math.round((value * 100) / newValColor.max)
+                      : 100;
+
+                  value = this.toDigital(value);
+                }
+                if (isValue) {
+                  if (level === 0 && colsTotals && pagination)
+                    totalRowPagGen(lvlRowIndex, newValSlug, value);
+
+                  const color = newValColor.colors[valuePercent];
+
+                  value =
+                    newValColor.isTag && color
+                      ? toTag(value, color, rows.length !== 1)
+                      : rows.length !== 1
+                      ? toStrong(value)
+                      : value;
+
+                  row[newValKey] = value;
+                }
+              } else {
+                row[newValKey] = '';
+              }
+            } else {
+              row[newValKey] = '';
+            }
           });
         }
       });
@@ -415,6 +525,7 @@ export class HTable extends Widget implements SingleData {
 
       labelArr.forEach((_, index, arr) => {
         const isLast = index === arr.length - 1;
+        const isSubLast = arr.length > 1 ? index === arr.length - 2 : isLast;
 
         const findCol = (ref, findIdx) => {
           const isFirst = findIdx === 0;
@@ -438,6 +549,9 @@ export class HTable extends Widget implements SingleData {
                 width: h_lastColsWidth,
                 sorter: (a, b) =>
                   sort(a[slug], b[slug], valuesNameToType[name] !== 'number'),
+              }),
+              ...(isSubLast && {
+                isSubLast: true,
               }),
               ...(!isLast && {
                 children: [],
@@ -514,7 +628,7 @@ export class HTable extends Widget implements SingleData {
             const isStrong = level !== lastLevel;
 
             value =
-              valIsNew && valColor.isTag && color
+              valIsNew && valColor.isTag && color && level === lastLevel
                 ? toTag(value, color, isStrong)
                 : isStrong
                 ? toStrong(value)
@@ -528,6 +642,8 @@ export class HTable extends Widget implements SingleData {
           data[slug] = '';
         }
 
+        if (newValAdd && isLast && (level !== lastLevel || rows.length === 1))
+          newColRender(data, level, lvlRowIndex);
         if (rowsTotals && isLast) totalColRender(data);
 
         return data;
@@ -585,6 +701,24 @@ export class HTable extends Widget implements SingleData {
 
       return acc;
     }, []);
+
+    if (valuesNoShowPaths.length) {
+      const filterCols = (cols) => {
+        cols.forEach((col) => {
+          if (col.isSubLast) {
+            col.children = col.children.filter((colChild) => {
+              const slug = colChild.key.split('_').pop();
+              const path = valuesSlugToPath[slug];
+              return !valuesNoShowPaths.includes(path);
+            });
+          } else {
+            filterCols(col.children);
+          }
+        });
+      };
+
+      filterCols(h_columns);
+    }
 
     if (allTotals) {
       totalRow = {

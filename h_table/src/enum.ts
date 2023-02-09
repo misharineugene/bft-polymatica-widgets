@@ -4,6 +4,7 @@ export enum EBlockKey {
   VALUES = 'Values',
   VALUES_NO_TOTAL = 'ValuesNoTotal',
   VALUES_HIDE = 'ValuesHide',
+  VALUES_NO_SHOW = 'ValuesNoShow',
 }
 
 export enum EViewKey {
@@ -33,6 +34,7 @@ export enum EViewKey {
   //
   newValsCount = 'newValsCount',
   //
+  newValAdd_0 = 'newValAdd_0',
   newValName_0 = 'newValName_0',
   newValFormula_0 = 'newValFormula_0',
   newValTotal_0 = 'newValTotal_0',
@@ -41,6 +43,7 @@ export enum EViewKey {
   newValColorThr_0 = 'newValColorThr_0',
   newValColorMin_0 = 'newValColorMin_0',
   //
+  newValAdd_1 = 'newValAdd_1',
   newValName_1 = 'newValName_1',
   newValFormula_1 = 'newValFormula_1',
   newValTotal_1 = 'newValTotal_1',
@@ -49,6 +52,7 @@ export enum EViewKey {
   newValColorThr_1 = 'newValColorThr_1',
   newValColorMin_1 = 'newValColorMin_1',
   //
+  newValAdd_2 = 'newValAdd_2',
   newValName_2 = 'newValName_2',
   newValFormula_2 = 'newValFormula_2',
   newValTotal_2 = 'newValTotal_2',
