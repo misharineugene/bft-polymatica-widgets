@@ -5,7 +5,7 @@ import {
   select,
 } from 'ptnl-constructor-sdk/config';
 import React from 'react';
-import { hrs } from './constants';
+import { hrs, newValsTotal } from './constants';
 import { EViewKey } from './enum';
 import Color from 'color';
 
@@ -278,6 +278,15 @@ export const getValuesNew = (count, values, valuesHideSelect) => {
           en: `Formula`,
         },
         defaultValue: defFormula.join(' / ') + ' * 100',
+      }),
+      select({
+        key: EViewKey['newValTotalFormula_' + i],
+        label: {
+          ru: `Расчет итогов в колонке`,
+          en: `Calculation of totals in a column`,
+        },
+        options: newValsTotal.map(getSelectItems),
+        defaultValue: newValsTotal[0][0],
       }),
       checkbox({
         key: EViewKey['newValTotal_' + i],

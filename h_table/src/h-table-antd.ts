@@ -440,13 +440,27 @@ export class HTable extends Widget implements SingleData {
     };
 
     const totalRowRender = (col, path, name, slug) => {
-      const isSum =
-        !valuesNoTotalPaths.includes(path) &&
-        valuesSlugToType[slug] === 'number';
+      const isSum =  !valuesNoTotalPaths.includes(path) && valuesSlugToType[slug] === 'number';
+
       if (isSum) {
-        const total = col.reduce((accData, dataItem) => {
-          return (accData += dataItem[path]);
-        }, 0);
+        let total = 0;
+
+        if (path.includes('col_new_') && settings[EViewKey['newValTotalFormula_' + path.replace('col_new_', '')]] === 'formula') {
+          let newValFormula = newVals.find(val => val['path'] === path)['formula'];
+
+          Object.entries(totalRow).forEach(([key, value]) => {
+            key = key.split('__').pop();
+            key = valuesSlugToPath[key] || key;
+            
+            newValFormula = newValFormula.replace(key, toNumber(value));
+          });
+
+          total = calculate(newValFormula);
+        } else {
+          total = col.reduce((accData, dataItem) => {
+            return (accData += getIsValue(dataItem[path]) ? dataItem[path] : 0);
+          }, 0);
+        }
 
         if (getIsValue(total, newValsPlus.includes(path))) {
           allT += total;

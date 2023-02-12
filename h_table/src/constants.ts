@@ -31,3 +31,8 @@ export const newVals = [
   ['2', '2', '2'],
   ['3', '3', '3'],
 ];
+
+export const newValsTotal = [
+  ['amount', 'Сумма', 'The Amount'],
+  ['formula', 'Формула', 'The Formula'],
+];
