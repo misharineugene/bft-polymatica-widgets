@@ -16,7 +16,6 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  width: 100%;
   padding: 15px;
   /*  */
   color: #000;
@@ -32,6 +31,6 @@ body {
   white-space: nowrap;
 }
 
-.root__item strong {
+.root__item span + strong {
   margin-left: 10px;
 }
