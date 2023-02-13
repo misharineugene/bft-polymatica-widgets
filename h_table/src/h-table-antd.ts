@@ -1,7 +1,7 @@
 import { createElement, Fragment } from 'react';
 //
 import { Declare, SingleData, Widget } from 'ptnl-constructor-sdk';
-import { Filter, FilterMethod, Target } from 'ptnl-constructor-sdk/data';
+import { ColumnType, Filter, FilterMethod, Target } from 'ptnl-constructor-sdk/data';
 //
 import { EBlockKey, EViewKey } from './enum';
 //
@@ -182,6 +182,8 @@ export class HTable extends Widget implements SingleData {
     let valuesNoTotalBlock = columnsByBlock[EBlockKey.VALUES_NO_TOTAL];
     valuesNoTotalBlock = [...valuesNoTotalBlock, ...valuesNoShowBlock];
     //
+    if (settings[EViewKey.isValuesNumber]) valuesBlock.forEach(item => item['type'] = ColumnType.Number);
+    // 
     const columnsPaths = columnsBlock.map((item) => item.path);
     const rowsPaths = rowsBlock.map((item) => item.path);
     const valuesPaths = valuesBlock.map((item) => item.path);

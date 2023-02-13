@@ -33,6 +33,8 @@ export enum EViewKey {
   TotalColWidth = 'TotalColWidth',
   //
   newValsCount = 'newValsCount',
+  // 
+  isValuesNumber = 'isValuesNumber',
   //
   newValAdd_0 = 'newValAdd_0',
   newValName_0 = 'newValName_0',

@@ -221,6 +221,15 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
     //
     getHR(getBlockLabel('Показатели', 'Indicators')),
     //
+    checkbox({
+      key: EViewKey.isValuesNumber,
+      label: {
+        ru: 'Все показатели как числа',
+        en: 'All indicators as numbers',
+      },
+      defaultValue: false,
+    }),
+    // 
     ...valuesHideBlock.map((valueBlock) => {
       return select({
         key: `HideValue_${valueBlock.path}`,
