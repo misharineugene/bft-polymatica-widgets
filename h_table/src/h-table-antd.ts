@@ -255,7 +255,7 @@ export class HTable extends Widget implements SingleData {
 
         valuesNames.forEach((valName) => {
           formula_arr.forEach((item) => {
-            if (valName.toString().toLowerCase() === item) {
+            if (valName.toString().toLowerCase() === item.trim()) {
               paths.push(valuesNameToPath[valName]);
             }
           });
