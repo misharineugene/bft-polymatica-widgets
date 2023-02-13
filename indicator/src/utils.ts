@@ -206,7 +206,7 @@ export const getColumn = (name, value, fontSize = '16', style?) => {
   if (!fontSize.includes('px') && !fontSize.includes('rem') && !fontSize.includes('em') && !fontSize.includes('%')) {
     fontSize = fontSize + 'px';
   } 
-  return `<div class="root__item" style="font-size: ${fontSize}">${name} <strong ${
+  return `<div class="root__item" style="font-size: ${fontSize}">${name ? '<span>' + name + '</span>' : ''} <strong ${
     style ? 'style="' + style + '"' : ''
   }>${value}</strong></div>`;
 };
