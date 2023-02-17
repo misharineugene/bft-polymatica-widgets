@@ -38,6 +38,7 @@ export enum EViewKey {
   //
   newValAdd_0 = 'newValAdd_0',
   newValName_0 = 'newValName_0',
+  newValPrePost_0 = 'newValPrePost_0',
   newValFormula_0 = 'newValFormula_0',
   newValTotal_0 = 'newValTotal_0',
   newValTotalFormula_0 = 'newValTotalFormula_0',
@@ -48,6 +49,7 @@ export enum EViewKey {
   //
   newValAdd_1 = 'newValAdd_1',
   newValName_1 = 'newValName_1',
+  newValPrePost_1 = 'newValPrePost_1',
   newValFormula_1 = 'newValFormula_1',
   newValTotal_1 = 'newValTotal_1',
   newValTotalFormula_1 = 'newValTotalFormula_1',
@@ -58,6 +60,7 @@ export enum EViewKey {
   //
   newValAdd_2 = 'newValAdd_2',
   newValName_2 = 'newValName_2',
+  newValPrePost_2 = 'newValPrePost_2',
   newValFormula_2 = 'newValFormula_2',
   newValTotal_2 = 'newValTotal_2',
   newValTotalFormula_2 = 'newValTotalFormula_2',
