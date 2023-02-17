@@ -58,7 +58,7 @@ export const toSlug = (string) => {
 export const toNumber = (value): number => {
   if (typeof value === 'object') value = getChild(value);
 
-  return Number(value.toString().replace(/\s/gi, '').replace(',', '.'));
+  return Number(value.toString().replace(/\+|-|%|\s/gi, '').replace(',', '.'));
 };
 //
 export const unique = (arr: string[]) => Array.from(new Set(arr));
@@ -158,6 +158,12 @@ export const toTag = (value, color, isStrong = false) => {
       borderColor: Color(color).darken(0.5).hex(),
     },
   });
+};
+// 
+export const toPrePost = (value, prePost) => {
+  const [prefix, postfix] = prePost.split('||');
+
+  return prefix + value + postfix;
 };
 //
 export const getChild = (element) => {
@@ -270,6 +276,15 @@ export const getValuesNew = (count, values, valuesHideSelect) => {
           en: `Name`,
         },
         defaultValue: 'Процент %',
+      }),
+      //
+      input({
+        key: EViewKey['newValPrePost_' + i],
+        label: {
+          ru: `Префикс||Постфикс`,
+          en: `Prefix||Postfix`,
+        },
+        defaultValue: '',
       }),
       input({
         key: EViewKey['newValFormula_' + i],

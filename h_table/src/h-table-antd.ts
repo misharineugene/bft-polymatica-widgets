@@ -23,6 +23,7 @@ import {
   toTag,
   createDeepCopy,
   getIsValue,
+  toPrePost,
 } from './utils';
 import { colType, rowType } from './types';
 
@@ -340,8 +341,8 @@ export class HTable extends Widget implements SingleData {
           const newValColor = valuesSlugToColor[newValSlug];
           const valHideLevel = settings[`HideValue_${newValPath}`];
           const valHideLevelExist = typeof valHideLevel !== 'undefined';
+          const valPrePost = settings[`newValPrePost_${newValPath.replace('col_new_', '')}`];
           //
-
           const newValsKeys = rowKeys.filter((key) => key.includes(newValSlug));
           const newValsStep = rowKeys.length / newValsKeys.length;
 
@@ -395,6 +396,8 @@ export class HTable extends Widget implements SingleData {
                     totalRowPagGen(lvlRowIndex, newValSlug, value);
 
                   const color = newValColor.colors[valuePercent];
+
+                  if (valPrePost) value = toPrePost(value, valPrePost);
 
                   value =
                     newValColor.isTag && color
@@ -604,6 +607,7 @@ export class HTable extends Widget implements SingleData {
 
         const valHideLevel = settings[`HideValue_${valPath}`];
         const valHideLevelExist = typeof valHideLevel !== 'undefined';
+        const valPrePost = settings[`ValPrePost_${valPath}`];
 
         const items = columnsPaths.reduce(
           (itemsAcc, path, pathIndex) =>
@@ -642,6 +646,8 @@ export class HTable extends Widget implements SingleData {
 
             const color = valIsNew ? valColor.colors[valuePercent] : '';
             const isStrong = level !== lastLevel;
+
+            if (valPrePost) value = toPrePost(value, valPrePost);
 
             value =
               valIsNew && valColor.isTag && color && level === lastLevel
