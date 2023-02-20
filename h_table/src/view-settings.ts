@@ -43,7 +43,7 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
   const valuesNew = getValuesNew(
     // typeof newValsCount !== 'undefined' ? +newValsCount : 1,
     3,
-    valuesBlock,
+    [...valuesBlock],
     valuesHideSelect,
   );
 
