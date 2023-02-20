@@ -78,10 +78,10 @@ export const config: Config = {
       }),
       filter(),
       sort(),
-      drilldown({
-        source: EBlockKey.COLUMNS,
-        additionalFilterSources: [EBlockKey.ROWS],
-      }),
+      // drilldown({
+      //   source: EBlockKey.COLUMNS,
+      //   additionalFilterSources: [EBlockKey.ROWS],
+      // }),
     ],
     validation: {
       requiredSome: [EBlockKey.VALUES],

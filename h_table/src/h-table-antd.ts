@@ -176,9 +176,11 @@ export class HTable extends Widget implements SingleData {
     };
     const totalRowPag = [];
     //
+    console.log(this);
+    
     const columnsBlock = columnsByBlock[EBlockKey.COLUMNS];
     const rowsBlock = columnsByBlock[EBlockKey.ROWS];
-    const valuesBlock = columnsByBlock[EBlockKey.VALUES];
+    const valuesBlock =  [...columnsByBlock[EBlockKey.VALUES]];
     const valuesNoShowBlock = columnsByBlock[EBlockKey.VALUES_NO_SHOW];
     let valuesNoTotalBlock = columnsByBlock[EBlockKey.VALUES_NO_TOTAL];
     valuesNoTotalBlock = [...valuesNoTotalBlock, ...valuesNoShowBlock];
