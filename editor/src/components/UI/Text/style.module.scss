@@ -1,0 +1,39 @@
+.textInline {
+  :global(.mce-content-body) {
+    box-sizing: border-box;
+    //
+    position: relative;
+    //
+    display: inline-block;
+    width: 100%;
+    max-width: 300px;
+    min-width: 0;
+    min-height: 30px;
+    margin: 0;
+    padding: 4px 11px;
+    overflow: hidden;
+    //
+    font-size: 14px;
+    line-height: 1.5714285714285714;
+    color: rgba(0, 0, 0, 0.88);
+    //
+    background-color: #ffffff;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    //
+    transition: all 0.2s;
+    outline: none;
+
+    & > p {
+      margin: 0;
+    }
+
+    &:hover {
+      border: 1px solid #4096ff;
+    }
+  }
+
+  :global(.mce-content-body.mce-edit-focus) {
+    border: 1px solid #4096ff;
+  }
+}
