@@ -1,0 +1,20 @@
+{
+  "russian": "Russian",
+  "english": "English",
+  "editor": {
+    "title": "UX Editor",
+    "closeText": "Close editor?<br> Settings not saved"
+  },
+  "close": "Close",
+  "yes": "Yes",
+  "cancel": "Cancel",
+  "help": "Help",
+  "save": {
+    "btn": "Save",
+    "loading": "Saving settings",
+    "success": "Settings have been saved"
+  },
+  "prev": "Previous",
+  "next": "Next",
+  "finish": "Finish :)"
+}

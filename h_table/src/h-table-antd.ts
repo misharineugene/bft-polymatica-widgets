@@ -392,6 +392,11 @@ export class HTable extends Widget implements SingleData {
                   value = this.toDigital(value);
                 }
                 if (isValue) {
+                  // const valPath = valuesSlugToPath[newValSlug];
+                  // const isSum =
+                  //   !valuesNoTotalPaths.includes(valPath) &&
+                  //   valuesSlugToType[newValSlug] === 'number';
+
                   if (level === 0 && colsTotals && pagination)
                     totalRowPagGen(lvlRowIndex, newValSlug, value);
 
@@ -479,6 +484,25 @@ export class HTable extends Widget implements SingleData {
     };
 
     const totalRowPagGen = (index, slug, value) => {
+
+        // const valPath = valuesSlugToPath[newValSlug];
+
+        // let total = 0;
+
+        // if (path.includes('col_new_') && settings[EViewKey['newValTotalFormula_' + path.replace('col_new_', '')]] === 'formula') {
+        //   let newValFormula = newVals.find(val => val['path'] === path)['formula'];
+
+        //   Object.entries(totalRow).forEach(([key, value]) => {
+        //     key = key.split('__').pop();
+        //     key = valuesSlugToPath[key] || key;
+            
+        //     newValFormula = newValFormula.replace(key, toNumber(value));
+        //   });
+
+        //   total = calculate(newValFormula);
+        // }
+
+
       if (totalPaging === 'sub') {
         if (!totalRowPag[currentPage]) totalRowPag.push({});
         if (!totalRowPag[currentPage][slug]) totalRowPag[currentPage][slug] = 0;
@@ -641,7 +665,12 @@ export class HTable extends Widget implements SingleData {
           }
 
           if (isValue) {
-            if (level === 0 && colsTotals && pagination)
+            const valPath = valuesSlugToPath[slug];
+            const isSum =
+              !valuesNoTotalPaths.includes(valPath) &&
+              valuesSlugToType[slug] === 'number';
+
+            if (level === 0 && colsTotals && pagination && isSum)
               totalRowPagGen(lvlRowIndex, slug, value);
 
             const color = valIsNew ? valColor.colors[valuePercent] : '';
@@ -745,7 +774,7 @@ export class HTable extends Widget implements SingleData {
     if (allTotals) {
       totalRow = {
         ...totalRow,
-        total: this.toTotal(allT * 2),
+        total: this.toTotal(allT),
       };
     }
 
@@ -778,7 +807,7 @@ export class HTable extends Widget implements SingleData {
               name: 'Всего',
               key: getKey(),
               ...(allTotals && {
-                total: this.toTotal(total * 2),
+                total: this.toTotal(total),
               }),
               ...newItem,
             };
