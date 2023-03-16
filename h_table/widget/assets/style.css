@@ -34,3 +34,18 @@ body {
   border: 1px solid #9ca3af;
   border-radius: 4px;
 }
+
+.ant-table-cell .scale {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  min-width: 10px;
+  max-width: 100%;
+  background-color: lightgray;
+  border-radius: 6px;
+}
+
+.ant-table-cell .scale > div {
+  position: absolute;
+  right: 15px;
+}

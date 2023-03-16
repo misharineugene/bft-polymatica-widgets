@@ -58,7 +58,12 @@ export const toSlug = (string) => {
 export const toNumber = (value): number => {
   if (typeof value === 'object') value = getChild(value);
 
-  return Number(value.toString().replace(/\+|-|%|\s/gi, '').replace(',', '.'));
+  return Number(
+    value
+      .toString()
+      .replace(/\+|-|%|\s/gi, '')
+      .replace(',', '.'),
+  );
 };
 //
 export const unique = (arr: string[]) => Array.from(new Set(arr));
@@ -159,7 +164,19 @@ export const toTag = (value, color, isStrong = false) => {
     },
   });
 };
-// 
+//
+export const toScale = (value, percent) => {
+  return React.createElement('div', {
+    children: React.createElement('div', {
+      children: value,
+    }),
+    className: 'scale',
+    style: {
+      width: percent + '%',
+    },
+  });
+};
+//
 export const toPrePost = (value, prePost) => {
   const [prefix, postfix] = prePost.split('||');
 
@@ -259,7 +276,7 @@ export const getValuesNew = (count, values, valuesHideSelect) => {
           `New indicator (${index})`,
         ),
       ),
-      // 
+      //
       checkbox({
         key: EViewKey['newValAdd_' + i],
         label: {
@@ -457,7 +474,7 @@ export const getRangeColor = (isTag, colors, range) => {
     min,
   };
 };
-// 
+//
 export const createDeepCopy = (input) => {
   if (input instanceof Date) {
     return new Date(input.getTime());

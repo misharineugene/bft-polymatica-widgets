@@ -229,29 +229,35 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
       },
       defaultValue: false,
     }),
-    //
-    ...valuesHideBlock
-      .map((valueBlock) => {
-        return select({
-            key: `HideValue_${valueBlock.path}`,
-            label: {
-              ru: `Отображать показатель "${valueBlock.name}" на уровне`,
-              en: `Display indicator "${valueBlock.name}" on level`,
-            },
-            options: valuesHideSelect.options,
-            defaultValue: valuesHideSelect.defaultValue,
-        })
+    checkbox({
+      key: EViewKey.isValuesBar,
+      label: {
+        ru: 'Шкала заполнения значения',
+        en: 'Value fill scale',
+      },
+      defaultValue: false,
     }),
-    ...valuesBlock
-      .map((valueBlock) => {
-        return input({
-            key: `ValPrePost_${valueBlock.path}`,
-            label: {
-              ru: `Показатель "${valueBlock.name}" - Префикс||Постфикс`,
-              en: `Indicator "${valueBlock.name}" - Prefix||Postfix`,
-            },
-            defaultValue: '',
-        })
+    //
+    ...valuesHideBlock.map((valueBlock) => {
+      return select({
+        key: `HideValue_${valueBlock.path}`,
+        label: {
+          ru: `Отображать показатель "${valueBlock.name}" на уровне`,
+          en: `Display indicator "${valueBlock.name}" on level`,
+        },
+        options: valuesHideSelect.options,
+        defaultValue: valuesHideSelect.defaultValue,
+      });
+    }),
+    ...valuesBlock.map((valueBlock) => {
+      return input({
+        key: `ValPrePost_${valueBlock.path}`,
+        label: {
+          ru: `Показатель "${valueBlock.name}" - Префикс||Постфикс`,
+          en: `Indicator "${valueBlock.name}" - Prefix||Postfix`,
+        },
+        defaultValue: '',
+      });
     }),
     //
     // select({
