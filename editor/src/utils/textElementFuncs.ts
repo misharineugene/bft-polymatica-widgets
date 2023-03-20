@@ -14,7 +14,7 @@ export const textDispatch = (content: string, ukey: string, target: number) => {
   let count = 0;
   const textArr: string[] = [];
   const tplArr: string[] = [];
-  const richArr: richType = {};
+  const richObj: richType = {};
   //
   const html = new DOMParser().parseFromString(content, 'text/html');
   //
@@ -66,7 +66,7 @@ export const textDispatch = (content: string, ukey: string, target: number) => {
         const style_name = 's_' + count;
         tplArr.push(`{${style_name}|${element.textContent}}`);
 
-        richArr[style_name] = {};
+        richObj[style_name] = {};
         const hasArr: hasArrType = {
           fontSize: false,
           color: false,
@@ -96,7 +96,7 @@ export const textDispatch = (content: string, ukey: string, target: number) => {
           value: style.fontSize.replace('px', ''),
           element: 'input',
         });
-        richArr[style_name].fontSize = style.fontSize;
+        richObj[style_name].fontSize = style.fontSize;
         hasArr.fontSize = true;
       }
 
@@ -106,12 +106,12 @@ export const textDispatch = (content: string, ukey: string, target: number) => {
           value: JSColor(style.color).hex(),
           element: 'color',
         });
-        richArr[style_name].color = style.color;
+        richObj[style_name].color = style.color;
         hasArr.color = true;
       }
 
       if (style.backgroundColor && !hasArr.backgroundColor) {
-        richArr[style_name].backgroundColor = style.backgroundColor;
+        richObj[style_name].backgroundColor = style.backgroundColor;
         hasArr.backgroundColor = true;
       }
 
@@ -121,7 +121,7 @@ export const textDispatch = (content: string, ukey: string, target: number) => {
           value: true,
           element: 'switch',
         });
-        richArr[style_name].fontWeight = 'bold';
+        richObj[style_name].fontWeight = 'bold';
         hasArr.fontWeight = true;
       } else if (nodeName === 'EM' && !hasArr.fontStyle) {
         storage('settings').add(ukey + 'Italic', {
@@ -129,7 +129,7 @@ export const textDispatch = (content: string, ukey: string, target: number) => {
           value: true,
           element: 'switch',
         });
-        richArr[style_name].fontStyle = 'italic';
+        richObj[style_name].fontStyle = 'italic';
         hasArr.fontStyle = true;
       }
 
@@ -139,7 +139,7 @@ export const textDispatch = (content: string, ukey: string, target: number) => {
           value: style.lineHeight,
           element: 'input',
         });
-        richArr[style_name].lineHeight = style.lineHeight;
+        richObj[style_name].lineHeight = style.lineHeight;
         hasArr.lineHeight = true;
       }
 
@@ -149,7 +149,7 @@ export const textDispatch = (content: string, ukey: string, target: number) => {
           value: style.textAlign,
           element: 'input',
         });
-        richArr[style_name].align = style.textAlign;
+        richObj[style_name].align = style.textAlign;
         hasArr.align = true;
       }
 
@@ -160,14 +160,14 @@ export const textDispatch = (content: string, ukey: string, target: number) => {
   setText(paragraphs);
   getText(paragraphs);
 
-  const rich = {
+  const tplObj = {
     text: tplArr.join(''),
-    style: richArr,
+    rich: richObj,
   };
 
   storage('settings').add(ukey + 'Rich', {
     target: target + 9,
-    value: JSON.stringify(rich),
+    value: JSON.stringify(tplObj),
     element: 'input',
   });
 };
