@@ -58,7 +58,7 @@ const Text: FC<TextProps> = ({
             inline || tpls ? '| tpls' : ''
           }`,
           font_size_formats: '8px 10px 12px 14px 18px 24px 36px',
-          content_style: 'body { font-family: Arial; font-size: 14px;  }',
+          content_style: 'body { font-family: Arial; font-size: 12px;  }',
           language: lang,
         }}
         onEditorChange={onChange}

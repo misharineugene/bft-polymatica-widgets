@@ -1,0 +1,16 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.ux-widget {
+  display: flex;
+  height: 100%;
+}
+
+.ux-widget__col {
+  width: 100%;
+  height: 100%;
+}
