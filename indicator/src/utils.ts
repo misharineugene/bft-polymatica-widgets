@@ -202,13 +202,22 @@ export const calculate = (string) => {
   return result;
 };
 //
+export const getTitle = (text, fontSize) => {
+  return `<strong style="text-align: center; font-size: ${fontSize}px">${text}</strong>`;
+};
+//
 export const getColumn = (name, value, fontSize = '16', style?) => {
-  if (!fontSize.includes('px') && !fontSize.includes('rem') && !fontSize.includes('em') && !fontSize.includes('%')) {
+  if (
+    !fontSize.includes('px') &&
+    !fontSize.includes('rem') &&
+    !fontSize.includes('em') &&
+    !fontSize.includes('%')
+  ) {
     fontSize = fontSize + 'px';
-  } 
-  return `<div class="root__item" style="font-size: ${fontSize}">${name ? '<span>' + name + '</span>' : ''} <strong ${
-    style ? 'style="' + style + '"' : ''
-  }>${value}</strong></div>`;
+  }
+  return `<div class="root__item" style="font-size: ${fontSize}">${
+    name ? '<span>' + name + '</span>' : ''
+  } <strong ${style ? 'style="' + style + '"' : ''}>${value}</strong></div>`;
 };
 //
 export const getRangeColor = (colors, range) => {

@@ -30,6 +30,7 @@ import {
   getIsValue,
   toPrePost,
   toScale,
+  getTitle,
 } from './utils';
 import { colType, rowType } from './types';
 
@@ -110,6 +111,21 @@ export class HTable extends Widget implements SingleData {
 
   private getChartDataset = () => {
     const settings = this.viewSettings;
+
+    //
+    const title: HTMLElement = document.getElementById('title');
+    title.innerHTML = '';
+    title.style.cssText = '';
+    if (settings[EViewKey.TitleShow] && settings[EViewKey.TitleText]) {
+      const title: HTMLElement = document.getElementById('title');
+      title.innerHTML = getTitle(
+        settings[EViewKey.TitleText],
+        settings[EViewKey.TitleFontSize],
+      );
+      title.style.cssText = 'margin-bottom: 15px';
+    }
+    //
+
     const { columnsByBlock } = this.dataSettings;
     //
     const firstColName = settings[EViewKey.FirstColName];
@@ -293,7 +309,7 @@ export class HTable extends Widget implements SingleData {
     });
 
     const columns: colType[] = columnsPaths.map((pathItem, index) => {
-      const cols = uniqueNamesByPath[pathItem];
+      const cols = uniqueNamesByPath[pathItem] || [];
 
       return {
         name: columnsNames[index],
@@ -303,7 +319,7 @@ export class HTable extends Widget implements SingleData {
     });
 
     const rows: rowType[] = rowsPaths.map((pathItem, index) => {
-      const rows = uniqueNamesByPath[pathItem];
+      const rows = uniqueNamesByPath[pathItem] || [];
 
       return {
         name: rowsNames[index],

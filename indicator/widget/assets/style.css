@@ -12,11 +12,23 @@ body {
   color: var(--text-tint-0);
 }
 
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 15px;
+  /*  */
+  color: #000;
+  /*  */
+  background-color: #fff;
+}
+
 .root {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  padding: 15px;
+  padding-top: 15px;
   /*  */
   color: #000;
   /*  */

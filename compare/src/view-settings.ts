@@ -3,11 +3,13 @@ import {
   colorPicker,
   CreateViewSettings,
   input,
+  select,
   ViewSettingsValidation,
 } from 'ptnl-constructor-sdk/config';
 import { DataSettings, ViewSettings } from 'ptnl-constructor-sdk';
 import { EBlockKey, EViewKey } from './enum';
-import { getBlockLabel, getHR } from './utils';
+import { getBlockLabel, getHR, getSelectItems } from './utils';
+import { fontSize } from './constants';
 
 export const createViewSettings: CreateViewSettings<DataSettings> = ({
   dataSettings,
@@ -19,6 +21,34 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
   const { columnsByBlock } = dataSettings;
 
   return [
+    getHR(getBlockLabel('Заголовок', 'Title')),
+    //
+    checkbox({
+      key: EViewKey.TitleShow,
+      label: {
+        ru: 'Отображать',
+        en: 'Show',
+      },
+      defaultValue: false,
+    }),
+    input({
+      key: EViewKey.TitleText,
+      label: {
+        ru: 'Значение заголовка',
+        en: 'Title value',
+      },
+      defaultValue: '',
+    }),
+    select({
+      key: EViewKey.TitleFontSize,
+      label: {
+        ru: 'Размер шрифта',
+        en: 'Font Size',
+      },
+      options: fontSize.map(getSelectItems),
+      defaultValue: fontSize[0][0],
+    }),
+    //
     getHR(getBlockLabel('Разрядность значений', 'Value Digital')),
     //
     checkbox({

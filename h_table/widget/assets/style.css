@@ -49,3 +49,10 @@ body {
   position: absolute;
   right: 15px;
 }
+
+#title {
+  display: block;
+  width: 100%;
+  /*  */
+  text-align: center;
+}

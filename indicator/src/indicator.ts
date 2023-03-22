@@ -11,6 +11,7 @@ import {
   getColumn,
   getRangeColor,
   getIsValue,
+  getTitle,
 } from './utils';
 
 @Declare({
@@ -145,8 +146,18 @@ export class Indicator extends Widget implements SingleData {
     const filteredData = this.filteredData;
     //
     const root: HTMLElement = document.getElementById('root');
-    root.classList.add('root');
     root.innerHTML = '';
+
+    if (settings[EViewKey.TitleShow] && settings[EViewKey.TitleText]) {
+      root.innerHTML += getTitle(
+        settings[EViewKey.TitleText],
+        settings[EViewKey.TitleFontSize],
+      );
+    }
+
+    const contentNode = document.createElement('div');
+    contentNode.classList.add('root');
+
     //
     const value1Name = settings[EViewKey.IsValue_1_Name]
       ? settings[EViewKey.Value_1_Name]
@@ -155,11 +166,12 @@ export class Indicator extends Widget implements SingleData {
       return (acc += dataItem[columnsByBlock[EBlockKey.VALUE_1][0].path]);
     }, 0);
     if (!settings[EViewKey.IsValue_1]) {
-      const [prefix = '', postfix = ''] = settings[EViewKey.Value_1_PrefixPostfix].split('|');
-      root.innerHTML += getColumn(
+      const [prefix = '', postfix = ''] =
+        settings[EViewKey.Value_1_PrefixPostfix].split('|');
+      contentNode.innerHTML += getColumn(
         value1Name,
         prefix + this.toDigital(value1) + postfix,
-        settings[EViewKey.Value_1_FontSize]
+        settings[EViewKey.Value_1_FontSize],
       );
     }
     //
@@ -170,11 +182,12 @@ export class Indicator extends Widget implements SingleData {
       return (acc += dataItem[columnsByBlock[EBlockKey.VALUE_2][0].path]);
     }, 0);
     if (!settings[EViewKey.IsValue_2]) {
-      const [prefix = '', postfix = ''] = settings[EViewKey.Value_2_PrefixPostfix].split('|');
-      root.innerHTML += getColumn(
+      const [prefix = '', postfix = ''] =
+        settings[EViewKey.Value_2_PrefixPostfix].split('|');
+      contentNode.innerHTML += getColumn(
         value2Name,
         prefix + this.toDigital(value2) + postfix,
-        settings[EViewKey.Value_2_FontSize]
+        settings[EViewKey.Value_2_FontSize],
       );
     }
     //
@@ -227,17 +240,21 @@ export class Indicator extends Widget implements SingleData {
           }
         }
 
-        const [prefix = '', postfix = ''] = settings[EViewKey[`NewValuePrefixPostfix_${i}`]].split('|');
+        const [prefix = '', postfix = ''] =
+          settings[EViewKey[`NewValuePrefixPostfix_${i}`]].split('|');
 
-        root.innerHTML += getColumn(
+        contentNode.innerHTML += getColumn(
           NewValueName,
-          getIsValue(NewValueValue) ? prefix + this.toDigital(NewValueValue) + postfix: '',
+          getIsValue(NewValueValue)
+            ? prefix + this.toDigital(NewValueValue) + postfix
+            : '',
           settings[EViewKey[`NewValueFontSize_${i}`]],
           style,
         );
       }
     }
     ////////////////////////////////
+    root.innerHTML += contentNode.outerHTML;
   }
 
   private setChartId = () => {

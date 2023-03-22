@@ -9,6 +9,10 @@ import { hrs, newValsTotal } from './constants';
 import { EViewKey } from './enum';
 import Color from 'color';
 
+export const getTitle = (text, fontSize) => {
+  return `<strong style="text-align: center; font-size: ${fontSize}px">${text}</strong>`;
+};
+
 export const toSlug = (string) => {
   const translate = {
     а: 'a',

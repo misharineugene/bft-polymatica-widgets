@@ -1,3 +1,4 @@
+import { fontSize } from './constants';
 import { Declare, SingleData, Widget } from 'ptnl-constructor-sdk';
 import { Filter, FilterMethod, Target } from 'ptnl-constructor-sdk/data';
 //
@@ -11,6 +12,7 @@ import {
   getColumn,
   getRangeColor,
   getIsValue,
+  getTitle,
 } from './utils';
 
 @Declare({
@@ -146,8 +148,18 @@ export class Compare extends Widget implements SingleData {
     const filteredData = this.filteredData;
     //
     const root: HTMLElement = document.getElementById('root');
-    root.classList.add('root');
     root.innerHTML = '';
+
+    if (settings[EViewKey.TitleShow] && settings[EViewKey.TitleText]) {
+      root.innerHTML += getTitle(
+        settings[EViewKey.TitleText],
+        settings[EViewKey.TitleFontSize],
+      );
+    }
+
+    const contentNode = document.createElement('div');
+    contentNode.classList.add('root');
+
     //
     const value1Name = settings[EViewKey.IsValue_1_Name]
       ? settings[EViewKey.Value_1_Name]
@@ -155,7 +167,7 @@ export class Compare extends Widget implements SingleData {
     const value1 = this.data.reduce((acc, dataItem) => {
       return (acc += dataItem[columnsByBlock[EBlockKey.VALUE_1][0].path]);
     }, 0);
-    root.innerHTML += getColumn(value1Name, this.toDigital(value1));
+    contentNode.innerHTML += getColumn(value1Name, this.toDigital(value1));
     //
     const value2Name = settings[EViewKey.IsValue_2_Name]
       ? settings[EViewKey.Value_2_Name]
@@ -163,17 +175,17 @@ export class Compare extends Widget implements SingleData {
     const value2 = this.data.reduce((acc, dataItem) => {
       return (acc += dataItem[columnsByBlock[EBlockKey.VALUE_2][0].path]);
     }, 0);
-    root.innerHTML += getColumn(value2Name, this.toDigital(value2));
-    // 
+    contentNode.innerHTML += getColumn(value2Name, this.toDigital(value2));
+    //
     const nameToValue = {
       [columnsByBlock[EBlockKey.VALUE_1][0].name.toLowerCase()]: value1,
       [columnsByBlock[EBlockKey.VALUE_2][0].name.toLowerCase()]: value2,
       [settings[EViewKey.ChangeName].toLowerCase()]: 0,
       [settings[EViewKey.ExecutionName].toLowerCase()]: 0,
       [settings[EViewKey.RateOfIncreaseName].toLowerCase()]: 0,
-    }
+    };
     ////////////////////////////////
-    if (settings[EViewKey.IsChange]) {      
+    if (settings[EViewKey.IsChange]) {
       const changeName = settings[EViewKey.ChangeName];
       const changeColorMax = settings[EViewKey.ChangeColorMax];
       const changeColorThr = settings[EViewKey.ChangeColorThr];
@@ -184,8 +196,8 @@ export class Compare extends Widget implements SingleData {
       );
       //
       let formula = settings[EViewKey.ChangeFormula].toLowerCase();
-      Object.entries(nameToValue).forEach(entry => {
-        const  [key, value] = entry;
+      Object.entries(nameToValue).forEach((entry) => {
+        const [key, value] = entry;
         formula = formula.replace(key, value);
       });
       nameToValue[changeName.toLowerCase()] = calculate(formula);
@@ -203,7 +215,7 @@ export class Compare extends Widget implements SingleData {
         }
       }
 
-      root.innerHTML += getColumn(
+      contentNode.innerHTML += getColumn(
         changeName,
         getIsValue(changeValue)
           ? (changeValue > 0 ? '+' : '') + this.toDigital(changeValue)
@@ -223,8 +235,8 @@ export class Compare extends Widget implements SingleData {
       );
       //
       let formula = settings[EViewKey.ExecutionFormula].toLowerCase();
-      Object.entries(nameToValue).forEach(entry => {
-        const  [key, value] = entry;
+      Object.entries(nameToValue).forEach((entry) => {
+        const [key, value] = entry;
         formula = formula.replace(key, value);
       });
       nameToValue[executionName.toLowerCase()] = calculate(formula);
@@ -242,7 +254,7 @@ export class Compare extends Widget implements SingleData {
         }
       }
 
-      root.innerHTML += getColumn(
+      contentNode.innerHTML += getColumn(
         executionName,
         getIsValue(executionValue)
           ? (executionValue > 0 ? '+' : '') +
@@ -265,8 +277,8 @@ export class Compare extends Widget implements SingleData {
       );
       //
       let formula = settings[EViewKey.RateOfIncreaseFormula].toLowerCase();
-      Object.entries(nameToValue).forEach(entry => {
-        const  [key, value] = entry;
+      Object.entries(nameToValue).forEach((entry) => {
+        const [key, value] = entry;
         formula = formula.replace(key, value);
       });
       nameToValue[rateOfIncreaseName.toLowerCase()] = calculate(formula);
@@ -284,7 +296,7 @@ export class Compare extends Widget implements SingleData {
         }
       }
 
-      root.innerHTML += getColumn(
+      contentNode.innerHTML += getColumn(
         rateOfIncreaseName,
         getIsValue(rateOfIncreaseValue)
           ? (rateOfIncreaseValue > 0 ? '+' : '') +
@@ -294,6 +306,8 @@ export class Compare extends Widget implements SingleData {
         style,
       );
     }
+
+    root.innerHTML += contentNode.outerHTML;
   }
 
   private setChartId = () => {
