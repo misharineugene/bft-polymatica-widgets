@@ -4,6 +4,10 @@ export enum EBlockKey {
 }
 
 export enum EViewKey {
+  TitleShow = 'TitleShow',
+  TitleText = 'TitleText',
+  TitleFontSize = 'TitleFontSize',
+  //
   Digital = 'Digital',
   DigitalNum = 'DigitalNum',
   //
@@ -12,7 +16,7 @@ export enum EViewKey {
   Value_1_Name = 'Value_1_Name',
   Value_1_PrefixPostfix = 'Value_1_PrefixPostfix',
   Value_1_FontSize = 'Value_1_FontSize',
-  // 
+  //
   IsValue_2 = 'IsValue_2',
   IsValue_2_Name = 'IsValue_2_Name',
   Value_2_Name = 'Value_2_Name',

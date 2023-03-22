@@ -1,5 +1,5 @@
 import { select } from 'ptnl-constructor-sdk/config';
-import { hrs } from './constants';
+import { hrs, fontSize } from './constants';
 //
 import Color from 'color';
 
@@ -200,6 +200,10 @@ export const calculate = (string) => {
   }
 
   return result;
+};
+//
+export const getTitle = (text, fontSize) => {
+  return `<strong style="text-align: center; font-size: ${fontSize}px">${text}</strong>`;
 };
 //
 export const getColumn = (name, value, style?) => {

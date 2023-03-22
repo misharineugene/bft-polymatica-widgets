@@ -10,6 +10,7 @@ import { DataSettings, ViewSettings } from 'ptnl-constructor-sdk';
 //
 import { EBlockKey, EViewKey } from './enum';
 import {
+  fontSize,
   newVals,
   showTotal,
   showTotalH,
@@ -48,6 +49,33 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
   );
 
   return [
+    getHR(getBlockLabel('Заголовок', 'Title')),
+    //
+    checkbox({
+      key: EViewKey.TitleShow,
+      label: {
+        ru: 'Отображать',
+        en: 'Show',
+      },
+      defaultValue: false,
+    }),
+    input({
+      key: EViewKey.TitleText,
+      label: {
+        ru: 'Значение заголовка',
+        en: 'Title value',
+      },
+      defaultValue: '',
+    }),
+    select({
+      key: EViewKey.TitleFontSize,
+      label: {
+        ru: 'Размер шрифта',
+        en: 'Font Size',
+      },
+      options: fontSize.map(getSelectItems),
+      defaultValue: fontSize[0][0],
+    }),
     input({
       key: EViewKey.FirstColName,
       label: {

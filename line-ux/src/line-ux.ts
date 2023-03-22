@@ -117,9 +117,7 @@ export class LineUx extends Widget implements SingleData {
     // const theme =
     //     (settings[themeSettings.Follow] && getLSU('theme')) ||
     //     settings[themeSettings.Theme];
-    const dom = document.querySelector(
-      '[data-target="view"]',
-    ) as HTMLDivElement;
+    const dom = document.getElementById('view') as HTMLDivElement;
 
     // if (theme !== 'DEFAULT') echarts.registerTheme(theme, THEMES[theme]);
     this._chart = echarts.init(dom, theme, { renderer: 'svg' });

@@ -36,3 +36,9 @@ export const newValsTotal = [
   ['amount', 'Сумма', 'The Amount'],
   ['formula', 'Формула', 'The Formula'],
 ];
+
+export const fontSize = [
+  ['12', '12', '12'],
+  ['15', '15', '15'],
+  ['18', '18', '18'],
+];

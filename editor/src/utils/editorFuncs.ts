@@ -32,7 +32,7 @@ const getNodes = () => {
   );
   //
   const root = document.getElementById('root');
-  const editor = root!.querySelector('[data-target=editor]');
+  const editor = root!.querySelector('#editor');
   //
   const [_, secondStep] = Array.from(steps);
   const [previewCol, settingsCol] = Array.from(columns);

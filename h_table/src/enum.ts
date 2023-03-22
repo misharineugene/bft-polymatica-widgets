@@ -8,6 +8,10 @@ export enum EBlockKey {
 }
 
 export enum EViewKey {
+  TitleShow = 'TitleShow',
+  TitleText = 'TitleText',
+  TitleFontSize = 'TitleFontSize',
+  //
   FirstColName = 'FirstColName',
   //
   HeadColor = 'HeadColor',

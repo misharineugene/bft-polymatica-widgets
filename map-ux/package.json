@@ -1,0 +1,23 @@
+{
+  "name": "map-ux",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ptnl-constructor-devtools --webpack-config ./webpack.config.js",
+    "build": "ptnl-constructor build --webpack-config ./webpack.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "echarts": "^5.4.1",
+    "leaflet": "^0.7.0",
+    "ptnl-constructor-sdk": "^0.13.1"
+  },
+  "devDependencies": {
+    "@types/echarts": "^4.9.16",
+    "ptnl-constructor-cli": "^0.11.2",
+    "ptnl-constructor-devtools": "^0.9.1"
+  }
+}
