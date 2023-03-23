@@ -11,13 +11,13 @@ export const position = [
 
 export const xAxisIndent = { vp: 8 };
 
-export const getXAxisHeight = (settings, seriesNames) => {
+export const getXAxisHeight = (settings, axisItems) => {
   const { xAxisRotate } = settings;
 
-  let content = seriesNames[0];
+  let content = axisItems[0];
 
   if (xAxisRotate != 0) {
-    seriesNames.forEach((label) => {
+    axisItems.forEach((label) => {
       content = label.length > content.length ? label : content;
     });
   }

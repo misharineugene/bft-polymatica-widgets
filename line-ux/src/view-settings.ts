@@ -16,6 +16,7 @@ import { getXAxisSettings } from './settings/xAxis/xAxis.settings';
 import { getYAxisSettings } from './settings/yAxis/yAxis.settings';
 import { getDataZoomSettings } from './settings/dataZoom/dataZoom.settings';
 import { getTooltipSettings } from './settings/tooltip/tooltip.settings';
+import { getLineSettings } from './settings/line/line.settings';
 
 export const createViewSettings: CreateViewSettings<DataSettings> = ({
   dataSettings,
@@ -35,6 +36,9 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
     }),
     getGroupLabel('Заголовок', 'Title'),
     ...getTitleSettings(),
+    //
+    getGroupLabel('График', 'Chart'),
+    ...getLineSettings(),
     //
     getGroupLabel('Легенда', 'Legend'),
     ...getLegendSettings(),

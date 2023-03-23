@@ -66,11 +66,11 @@ export const getSettings = (settings) => {
     link: settings[TitleEViewKey.Link],
     target: settings[TitleEViewKey.Target],
     //
-    color: settings[TitleEViewKey.Color] || '#000',
+    color: settings[TitleEViewKey.Color] || '#333',
     fontStyle: settings[TitleEViewKey.Italic] && !rich ? 'italic' : 'normal',
-    fontWeight: settings[TitleEViewKey.Bold] && !rich ? 'bold' : 'normal',
-    fontSize: !rich ? settings[TitleEViewKey.FontSize] || '12' : '12',
-    lineHeight: !rich ? settings[TitleEViewKey.LineHeight] || '18' : '18',
+    fontWeight: settings[TitleEViewKey.Bold] && !rich ? 'bold' : 'bold',
+    fontSize: !rich ? settings[TitleEViewKey.FontSize] || '18' : '18',
+    lineHeight: !rich ? settings[TitleEViewKey.LineHeight] || '27' : '27',
     rich: rich || {},
     textAlign: !rich ? settings[TitleEViewKey.TextAlign] || 'left' : 'left',
     //

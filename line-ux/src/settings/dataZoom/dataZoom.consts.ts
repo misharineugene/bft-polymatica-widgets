@@ -11,7 +11,7 @@ import { DataZoomEViewKey } from './dataZoom.types';
 
 export const dataZoomIndent = { vm: 20, hm: '10%', vp: 0 }; // todo
 
-export const getDataZoomMargin = (settings, seriesNames) => {
+export const getDataZoomMargin = (settings, sItems) => {
   let { left, top, right, bottom, titleShow, titleTop, legendShow, legendTop } =
     settings;
   const indent = dataZoomIndent;
@@ -56,7 +56,7 @@ export const getDataZoomMargin = (settings, seriesNames) => {
       addMarginByHeight({
         dir: legendTop,
         margin,
-        height: getLegendHeight(settings, seriesNames),
+        height: getLegendHeight(settings, sItems),
       });
     }
   }

@@ -3,15 +3,12 @@ import { getDataZoomMargin, getSettings } from './dataZoom.consts';
 // types
 import { DataZoomType } from './dataZoom.types';
 
-export function getDataZoomTpl(settings, seriesName): DataZoomType[] {
+export function getDataZoomTpl(settings, sItems): DataZoomType[] {
   const settingsObj = getSettings(settings);
   //
   const { show, inside } = settingsObj;
   //
-  const { left, top, right, bottom } = getDataZoomMargin(
-    settingsObj,
-    seriesName,
-  );
+  const { left, top, right, bottom } = getDataZoomMargin(settingsObj, sItems);
   //
   const optionArr = [];
 
