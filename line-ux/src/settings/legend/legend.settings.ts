@@ -146,7 +146,7 @@ export const getLegendSettings = () => {
         ru: 'Цвет',
         en: 'Color',
       },
-      defaultValue: '#000',
+      defaultValue: '#333',
     }),
     checkbox({
       key: LegendEViewKey.Bold,

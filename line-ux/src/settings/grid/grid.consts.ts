@@ -23,7 +23,7 @@ import { GridEViewKey } from './grid.types';
 
 export const gridIndent = { vm: 60, hm: '10%' };
 
-export const getGridMargin = (settings, seriesNames) => {
+export const getGridMargin = (settings, sItems, xItems) => {
   let {
     left,
     top,
@@ -77,7 +77,7 @@ export const getGridMargin = (settings, seriesNames) => {
       addMarginByHeight({
         dir: legendTop,
         margin,
-        height: getLegendHeight(settings, seriesNames),
+        height: getLegendHeight(settings, sItems),
         add: legendIndent.vm * 2 - legendIndent.vp * 2,
       });
     }
@@ -95,7 +95,7 @@ export const getGridMargin = (settings, seriesNames) => {
       addMarginByHeight({
         dir: xAxisTop,
         margin,
-        height: getXAxisHeight(settings, seriesNames),
+        height: getXAxisHeight(settings, xItems),
       });
     }
 

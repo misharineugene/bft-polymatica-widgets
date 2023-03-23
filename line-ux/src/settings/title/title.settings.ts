@@ -44,7 +44,7 @@ export const getTitleSettings = () => {
         ru: 'Размер шрифта',
         en: 'FontSize',
       },
-      defaultValue: '12',
+      defaultValue: '18',
     }),
     colorPicker({
       key: TitleEViewKey.Color,
@@ -52,7 +52,7 @@ export const getTitleSettings = () => {
         ru: 'Цвет',
         en: 'Color',
       },
-      defaultValue: '#000',
+      defaultValue: '#333',
     }),
     checkbox({
       key: TitleEViewKey.Bold,
@@ -60,7 +60,7 @@ export const getTitleSettings = () => {
         ru: 'Жирный шрифт',
         en: 'Bold',
       },
-      defaultValue: false,
+      defaultValue: true,
     }),
     checkbox({
       key: TitleEViewKey.Italic,
@@ -76,7 +76,7 @@ export const getTitleSettings = () => {
         ru: 'Высота строки',
         en: 'Line Height',
       },
-      defaultValue: '18',
+      defaultValue: '27',
     }),
     input({
       key: TitleEViewKey.TextAlign,

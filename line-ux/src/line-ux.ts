@@ -18,6 +18,7 @@ import { getTooltipTpl } from './settings/tooltip/tooltip.template';
 import { SettingType } from './types';
 import * as echarts from 'echarts';
 import ECharts = echarts.ECharts;
+import { getLineTpl } from './settings/line/line.template';
 
 @Declare({
   provideCssVariables: true,
@@ -31,65 +32,97 @@ export class LineUx extends Widget implements SingleData {
   //
   private settings: SettingType = {};
 
-  getDataByColumn(column: string): string[] {
-    return this.data.map((item) => item[column]);
+  getDataByPath(path: string): string[] {
+    return this.data.map((item) => item[path]);
+  }
+
+  getUniqueDataByPath(path: string): string[] {
+    return Array.from(new Set(this.getDataByPath(path)));
+  }
+
+  getDataConfig() {
+    const { columnsByBlock } = this.dataSettings;
+    //
+    const xBlock = columnsByBlock[EBlockKey.X];
+    const yBlock = columnsByBlock[EBlockKey.Y];
+    const sBlock = columnsByBlock[EBlockKey.S];
+    //
+    this.hasCategory = sBlock.length ? true : false;
+    //
+    const xPath = xBlock.length ? xBlock[0].path : null;
+    const yPaths = yBlock.length ? yBlock.map((item) => item.path) : null;
+    const sPath = sBlock.length ? sBlock[0].path : null;
+    //
+    const xItems = xPath ? this.getUniqueDataByPath(xPath) : [];
+    const yItems = yPaths ? yBlock.map((item) => item.name) : [];
+    const sItems = sPath ? this.getUniqueDataByPath(sPath) : [];
+    //
+    const sNames = [];
+    //
+    if (sItems.length) {
+      sItems.forEach((sItem) => {
+        yItems.forEach((yItem) => {
+          sNames.push(yItems.length > 1 ? sItem + ' - ' + yItem : sItem);
+        });
+      });
+    } else {
+      sNames.push(...yItems);
+    }
+    //
+    const dataset: object[] = [
+      {
+        source: this.data,
+      },
+    ];
+
+    if (sPath) {
+      sItems.forEach((item) => {
+        dataset.push({
+          transform: {
+            type: 'filter',
+            config: { dimension: sPath, value: item },
+          },
+        });
+      });
+    }
+
+    return {
+      xPath,
+      yPaths,
+      sPath,
+      //
+      xItems,
+      yItems,
+      sItems,
+      //
+      sNames,
+      dataset,
+    };
   }
 
   getChartOptions(): any {
-    const { columnsByBlock } = this.dataSettings;
     const settings = this.settings;
-    this.hasCategory = columnsByBlock[EBlockKey.S].length ? true : false;
-    //
-    const xPath = columnsByBlock[EBlockKey.X][0].path;
-    const yPath = columnsByBlock[EBlockKey.Y][0].path;
-    const sPath = this.hasCategory ? columnsByBlock[EBlockKey.S][0].path : null;
-    //
-    const seriesNames = this.hasCategory
-      ? Array.from(new Set(this.getDataByColumn(sPath)))
-      : [];
 
-    const seriesNamesData = this.hasCategory
-      ? this.getDataByColumn(sPath)
-      : columnsByBlock[EBlockKey.Y].map((block) => block.name);
+    const dataConfig = this.getDataConfig();
+    const {
+      xItems,
+      sNames,
+      //
+      dataset,
+    } = dataConfig;
 
     const result = {
+      dataset,
+      //
       title: getTitleTpl(settings),
       legend: getLegendTpl(settings),
-      grid: getGridTpl(settings, seriesNamesData),
+      grid: getGridTpl(settings, sNames, xItems),
       xAxis: getXAxisTpl(settings),
       yAxis: getYAxisTpl(settings),
-      dataZoom: getDataZoomTpl(settings, seriesNamesData),
+      dataZoom: getDataZoomTpl(settings, sNames),
       tooltip: getTooltipTpl(settings),
+      series: getLineTpl(settings, dataConfig),
       textStyle: { fontFamily: 'Arial' },
-      //
-      dataset: [
-        {
-          source: this.data,
-        },
-        ...seriesNames.map((name) => {
-          return {
-            transform: {
-              type: 'filter',
-              config: { dimension: sPath, value: name },
-            },
-          };
-        }),
-      ],
-      series: this.hasCategory
-        ? seriesNames.map((name, index) => {
-            return {
-              name,
-              type: 'line',
-              encode: { x: xPath, y: yPath },
-              datasetIndex: index + 1,
-            };
-          })
-        : {
-            name: columnsByBlock[EBlockKey.Y][0].name,
-            type: 'line',
-            encode: { x: xPath, y: yPath },
-            datasetIndex: 0,
-          },
     };
 
     return result;

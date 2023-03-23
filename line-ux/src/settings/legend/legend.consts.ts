@@ -120,7 +120,7 @@ export const getSettings = (settings) => {
     //
     formatter: text,
     //
-    color: settings[LegendEViewKey.Color] || '#000',
+    color: settings[LegendEViewKey.Color] || '#333',
     fontStyle: settings[LegendEViewKey.Italic] && !rich ? 'italic' : 'normal',
     fontWeight: settings[LegendEViewKey.Bold] && !rich ? 'bold' : 'normal',
     fontSize: !rich ? settings[LegendEViewKey.FontSize] || '12' : '12',
