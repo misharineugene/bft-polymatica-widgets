@@ -28,6 +28,16 @@ export const config: Config = {
 
     blocks: [
       block({
+        key: EBlockKey.X,
+        dataQueryFunction: DataQueryFunction.Group,
+        label: {
+          ru: 'Колонка для Drilldown',
+          en: 'Column for Drilldown',
+        },
+        columnTypes: [ColumnType.String],
+      }),
+      //
+      block({
         key: EBlockKey.Lat,
         dataQueryFunction: DataQueryFunction.Group,
         label: {
@@ -61,7 +71,7 @@ export const config: Config = {
       filter(),
       sort(),
       drilldown({
-        source: EBlockKey.Values,
+        source: EBlockKey.X,
       }),
     ],
   },

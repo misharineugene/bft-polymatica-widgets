@@ -12,24 +12,46 @@ export function getTooltipTpl(settings, dataset, widget) {
     triggerOn,
   } = settingsObj;
 
-  if (show) {
-    widget.markers.forEach((marker) => {
-      const {
-        _latlng: { lat, lng },
-      } = marker;
-      const findItem = dataset.find(
-        (item) => item.lat === lat && item.lon === lng,
-      );
-      const name = (findItem && findItem.val_0) || '';
+  widget.markers.forEach((marker) => {
+    const {
+      _latlng: { lat, lng },
+    } = marker;
+    const findIndex = dataset.findIndex(
+      (item) => item.lat === lat && item.lon === lng,
+    );
+    const findItem = dataset[findIndex];
+    const values = (findItem && findItem.values) || [];
+    const name = (findItem && findItem.x) || '';
 
-      if (findItem && name) {
-        marker.on(triggerOn, function (e) {
-          L.popup()
+    if (findItem) {
+      marker.on(triggerOn, function (e) {
+        if (show && values.length) {
+          const content = values
+            .map(({ name, value }) => {
+              return `<div class="tooltip-line">${name}: <strong>${value}</strong></div>`;
+            })
+            .join('');
+
+          L.popup({
+            maxWidth: 560,
+          })
             .setLatLng(e.latlng)
-            .setContent(`<strong>${name}</strong>`)
+            .setContent(content)
             .openOn(widget._chart);
+        }
+      });
+
+      if (name) {
+        marker.on('click', function (e) {
+          const params = {
+            dataIndex: findIndex,
+            seriesIndex: 0,
+            name: name,
+          };
+
+          widget.onClick(params);
         });
       }
-    });
-  }
+    }
+  });
 }

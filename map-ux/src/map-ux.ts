@@ -32,31 +32,47 @@ export class MapUx extends Widget implements SingleData {
     return this.data.map((item) => item[path]);
   }
 
-  getChartOptions(): any {
+  getUniqueDataByPath(path: string): string[] {
+    return Array.from(new Set(this.getDataByPath(path)));
+  }
+
+  getDataConfig() {
     const { columnsByBlock } = this.dataSettings;
-    const settings = this.settings;
     //
-    const latPath = columnsByBlock[EBlockKey.Lat][0]?.path;
-    const lonPath = columnsByBlock[EBlockKey.Lon][0]?.path;
-    const valsPaths = columnsByBlock[EBlockKey.Values].map((item) => item.path);
-
-    console.log('this.data', this.data);
-    
-
+    const xBlock = columnsByBlock[EBlockKey.X];
+    const latBlock = columnsByBlock[EBlockKey.Lat];
+    const lonBlock = columnsByBlock[EBlockKey.Lon];
+    const valuesBlock = columnsByBlock[EBlockKey.Values];
+    //
+    const xPath = xBlock.length ? xBlock[0].path : null;
+    const latPath = latBlock.length ? latBlock[0].path : null;
+    const lonPath = lonBlock.length ? lonBlock[0].path : null;
+    const valuesPaths = valuesBlock.length
+      ? valuesBlock.map((item) => item.path)
+      : [];
+    //
     const dataset = this.data.map((item) => {
-      console.log('item', item);
-      console.log('item[latPath]', item[latPath]);
-      console.log('Number(item[latPath])', Number(item[latPath]));
-      
       return {
+        x: item[xPath] || '',
         lat: Number(item[latPath]) || 0,
         lon: Number(item[lonPath]) || 0,
-        ...valsPaths.reduce((acc, valPath, index) => {
-          acc[`val_${index}`] = item[valPath];
-          return acc;
-        }, {}),
+        values: valuesPaths.map((valPath, valIndex) => ({
+          name: valuesBlock[valIndex].name,
+          value: item[valPath],
+        })),
       };
     });
+
+    return {
+      dataset,
+    };
+  }
+
+  getChartOptions(): any {
+    const settings = this.settings;
+    //
+    const dataConfig = this.getDataConfig();
+    const { dataset } = dataConfig;
 
     getMapTpl(settings, dataset, this);
     // getTitleTpl(settings);
@@ -64,6 +80,21 @@ export class MapUx extends Widget implements SingleData {
     getClusterTpl(settings, dataset, this);
     getTooltipTpl(settings, dataset, this);
   }
+
+  private onClick = (params) => {
+    const { dataIndex, seriesIndex, name } = params;
+    const { columnsByBlock } = this.dataSettings;
+    const colKey = EBlockKey['X'];
+
+    const filter = {
+      column: columnsByBlock[colKey]?.[0],
+      method: FilterMethod.Equal,
+      value: name,
+    };
+
+    this.dataSettings.setFilter(filter, seriesIndex, Target.Other);
+    this.dataSettings.interact(dataIndex);
+  };
 
   private chartInit = () => {
     this.settings = { ...this.viewSettings };
