@@ -37,6 +37,9 @@ const Text: FC<TextProps> = ({
   };
 
   const widgetUrl = document.location.pathname.replace('/index.html', '');
+  const plugins = [];
+
+  if (inline || tpls) plugins.push('tpls', 'link');
 
   return (
     <div
@@ -53,9 +56,9 @@ const Text: FC<TextProps> = ({
           inline: inline || false,
           height: 150,
           menubar: false,
-          plugins: inline || tpls ? 'tpls' : '',
+          plugins,
           toolbar: `fontsize | bold italic | alignleft aligncenter alignright | forecolor backcolor lineheight ${
-            inline || tpls ? '| tpls' : ''
+            inline || tpls ? '| link | tpls' : ''
           }`,
           font_size_formats: '8px 10px 12px 14px 18px 24px 36px',
           content_style: 'body { font-family: Arial; font-size: 12px;  }',

@@ -8,6 +8,8 @@ import Select from '../components/UI/Select';
 import Switch from '../components/UI/Switch';
 import Color from '../components/UI/Color';
 import Text from '../components/UI/Text';
+import Slider from '../components/UI/Slider';
+import Combo from '../components/UI/Combo';
 
 const elements = {
   text: (props) => <Text {...props} />,
@@ -22,6 +24,8 @@ const elements = {
   formList: (props) => <FormList {...props} />,
   formula: (props) => <Formula {...props} />,
   radioButton: (props) => <RadioButton {...props} />,
+  slider: (props) => <Slider {...props} />,
+  combo: (props) => <Combo {...props} />,
 } as {
   [key: string]: (props: any) => any;
 };

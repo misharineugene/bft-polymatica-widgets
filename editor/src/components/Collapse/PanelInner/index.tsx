@@ -5,11 +5,13 @@ import {
   useContext,
   useRef,
   MutableRefObject,
+  ReactNode,
 } from 'react';
 //
 import _ from 'lodash';
 //
-import { Form, Tour, TourStepProps } from 'antd';
+import { Carousel, Form, Image, Tour, TourStepProps } from 'antd';
+import { EyeOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 //
 import FormItem from '../../FormItem';
 // hooks
@@ -25,7 +27,11 @@ import {
 } from '../../../utils/getPanelFunc';
 
 // types
+import { CustomArrowProps } from '@ant-design/react-slick';
 import { onFormType, childType, urefType } from '../../../types';
+
+const HtmlToReactParser = require('html-to-react').Parser;
+const htmlToReactParser = new HtmlToReactParser();
 
 type refsType = MutableRefObject<null>[];
 
@@ -71,6 +77,73 @@ const PanelInner: FC<PanelInner> = ({ childs, isHelpOpen, onCloseHelp }) => {
     setRefs(itemsRefs);
   }, []);
 
+  type CustomArrowType = CustomArrowProps & {
+    children?: ReactNode;
+  };
+
+  const getCover = (cover: string[]): ReactNode => {
+    const SlickButtonFix: FC<CustomArrowType> = ({
+      currentSlide,
+      slideCount,
+      children,
+      ...props
+    }) => <div {...props}>{children}</div>;
+
+    if (cover.length > 1) {
+      return (
+        <Carousel
+          autoplay
+          arrows
+          draggable
+          prevArrow={
+            <SlickButtonFix>
+              <LeftOutlined />
+            </SlickButtonFix>
+          }
+          nextArrow={
+            <SlickButtonFix>
+              <RightOutlined />
+            </SlickButtonFix>
+          }
+        >
+          {cover.map((img) => {
+            return (
+              <Image
+                key={img}
+                src={`editor/help/images/${img}`}
+                preview={{
+                  mask: (
+                    <>
+                      <EyeOutlined />
+                      <span style={{ marginLeft: 10 }}>Посмотреть</span>
+                    </>
+                  ),
+                }}
+              />
+            );
+          })}
+        </Carousel>
+      );
+    }
+
+    const img = cover[0];
+
+    return (
+      <Image
+        key={img}
+        src={`editor/help/images/${img}`}
+        preview={{
+          mask: (
+            <>
+              <EyeOutlined />
+              <span style={{ marginLeft: 10 }}>{t('preview')}</span>
+            </>
+          ),
+        }}
+      />
+    );
+  };
+
   useEffect(() => {
     let refCount = 0;
     const currentSteps: TourStepProps[] = childs.reduce(
@@ -90,10 +163,13 @@ const PanelInner: FC<PanelInner> = ({ childs, isHelpOpen, onCloseHelp }) => {
 
           target = refs[refCount] ? refs[refCount].current : null;
           childAcc.push({
-            ...help[lang],
-            ...(help.cover && {
-              cover: help.cover,
-            }),
+            title: htmlToReactParser.parse(help[lang].title),
+            description: htmlToReactParser.parse(help[lang].description!),
+            ...(help.cover &&
+              help.cover.length && {
+                cover: getCover(help.cover),
+              }),
+            placement: 'left',
             target,
             prevButtonProps: {
               children: t('prev'),
@@ -175,7 +251,7 @@ const PanelInner: FC<PanelInner> = ({ childs, isHelpOpen, onCloseHelp }) => {
     <>
       <Form>
         {childs.map((item) => {
-          const { key, ...props } = item;
+          const { key, col, ...props } = item;
           let uref: urefType = refs[refCount];
 
           if (item.element === 'list') {
@@ -192,6 +268,7 @@ const PanelInner: FC<PanelInner> = ({ childs, isHelpOpen, onCloseHelp }) => {
               onForm={onForm}
               disabled={extra[key]}
               formula={formula}
+              col={col}
               {...props}
             />
           );

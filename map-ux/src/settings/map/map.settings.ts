@@ -10,7 +10,7 @@ export const getMapSettings = () => {
         ru: 'Координаты центра карты',
         en: 'Map center coordinates',
       },
-      defaultValue: '66.25, 94.15',
+      defaultValue: '66.25::94.15',
     }),
     input({
       key: MapEViewKey.Zoom,

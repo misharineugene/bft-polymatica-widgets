@@ -4,47 +4,70 @@ import { getSettings } from './heat.consts';
 export function getHeatTpl(settings, dataset, widget) {
   const settingsObj = getSettings(settings);
   //
-  const { show, path, radius } = settingsObj;
+  const {
+    show,
+    valueH,
+    radius,
+    //
+    colorMin,
+    colorAvg,
+    colorMax,
+  } = settingsObj;
   let max = 0;
 
   if (show) {
-    // @ts-ignore
-    const heat = new HeatmapOverlay({
-      radius,
-      minOpacity: 0.2,
-      maxOpacity: 0.5,
-      // scaleRadius: true,
-      // useLocalExtrema: true,
-      gradient: {
-        '.1': 'green',
-        '.5': 'yellow',
-        '.9': 'red',
-      },
-      //
-      latField: 'lat',
-      lngField: 'lon',
-      valueField: 'value',
-    });
+    const heatInit = () => {
+      // @ts-ignore
+      if (HeatmapOverlay) {
+        // @ts-ignore
+        const heat = new HeatmapOverlay({
+          radius,
+          minOpacity: 0.2,
+          maxOpacity: 0.5,
+          // scaleRadius: true,
+          // useLocalExtrema: true,
+          gradient: {
+            '.1': colorMin,
+            '.5': colorAvg,
+            '.9': colorMax,
+          },
+          //
+          latField: 'lat',
+          lngField: 'lon',
+          valueField: 'value',
+        });
 
-    const data = dataset.reduce((acc, item) => {
-      const { lat, lon, ...values } = item;
+        const indexH = Number(valueH.split('_').pop()) || 0;
 
-      if (lat && lon) {
-        const value = Number(values[path]) || 0;
+        const data = dataset.reduce((acc, item) => {
+          const { lat, lon, values } = item;
 
-        max = value > max ? value : max;
+          if (lat && lon) {
+            const value = values.length ? Number(values[indexH].value) : 0;
 
-        acc.push({ lat, lon, value });
+            max = value > max ? value : max;
+
+            acc.push({ lat, lon, value });
+          }
+
+          return acc;
+        }, []);
+
+        heat.setData({
+          max,
+          data,
+        });
+
+        heat.addTo(widget._chart);
+
+        return true;
+      } else {
+        return false;
       }
+    };
 
-      return acc;
-    }, []);
-
-    heat.setData({
-      max,
-      data,
-    });
-
-    heat.addTo(widget._chart);
+    const interval = setInterval(() => {
+      if (heatInit()) clearInterval(interval);
+    }, 300);
   }
 }

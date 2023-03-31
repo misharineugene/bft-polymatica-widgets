@@ -1,4 +1,9 @@
-import { checkbox, input, select } from 'ptnl-constructor-sdk/config';
+import {
+  checkbox,
+  colorPicker,
+  input,
+  select,
+} from 'ptnl-constructor-sdk/config';
 // utils
 import { getSelectItems } from './../../utils/getSelectItems';
 // types
@@ -23,6 +28,24 @@ export const getHeatSettings = (dataSettings) => {
       defaultValue: false,
     }),
     //
+    select({
+      key: HeatEViewKey.ValueH,
+      label: {
+        ru: 'Сравниваемый показатель',
+        en: 'Comparable indicator',
+      },
+      options: valuesArr.map(getSelectItems),
+      defaultValue: valuesArr[0]?.[0] || '',
+    }),
+    input({
+      key: HeatEViewKey.ValueH,
+      label: {
+        ru: 'Сравниваемый показатель',
+        en: 'Comparable indicator',
+      },
+      defaultValue: valuesArr[0]?.[0] || '',
+    }),
+    //
     input({
       key: HeatEViewKey.Radius,
       label: {
@@ -32,22 +55,29 @@ export const getHeatSettings = (dataSettings) => {
       defaultValue: '50',
     }),
     //
-    input({
-      key: HeatEViewKey.Value,
+    colorPicker({
+      key: HeatEViewKey.ColorMin,
       label: {
-        ru: 'Сравниваемый показатель',
-        en: 'Comparable indicator',
+        ru: 'Цвет минимального значения',
+        en: 'Minimum value color',
       },
-      defaultValue: valuesArr[0]?.[0] || '',
+      defaultValue: 'red',
     }),
-    select({
-      key: HeatEViewKey.Value,
+    colorPicker({
+      key: HeatEViewKey.ColorAvg,
       label: {
-        ru: 'Сравниваемый показатель',
-        en: 'Comparable indicator',
+        ru: 'Цвет среднего значения',
+        en: 'Average value color',
       },
-      options: valuesArr.map(getSelectItems),
-      defaultValue: valuesArr[0]?.[0] || '',
+      defaultValue: 'yellow',
+    }),
+    colorPicker({
+      key: HeatEViewKey.ColorMax,
+      label: {
+        ru: 'Цвет максимального значения',
+        en: 'Maximum value color',
+      },
+      defaultValue: 'green',
     }),
   ];
 };

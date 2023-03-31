@@ -1,22 +1,19 @@
 import { FC, useContext } from 'react';
 //
-import { Form, Typography } from 'antd';
+import { ColProps, Form, Typography } from 'antd';
 // utils
 import { Context } from '../../utils/getContext';
 import { getElement } from '../../utils/getElement';
 // hooks
 import { formulaType } from '../../hooks/useFormula';
 // types
-import { onFormType, urefType } from '../../types';
+import { labelType, onFormType, urefType } from '../../types';
 //
 const { Text } = Typography;
 
 type FormItemProps = {
   uref?: urefType;
-  label: {
-    ru: string;
-    en: string;
-  };
+  label: labelType;
   element: string;
   className?: string;
   disabled: boolean;
@@ -24,6 +21,7 @@ type FormItemProps = {
   formula?: formulaType;
   onForm: onFormType;
   ukey: string;
+  col?: ColProps;
 };
 
 const FormItem: FC<FormItemProps> = ({
@@ -33,6 +31,7 @@ const FormItem: FC<FormItemProps> = ({
   disabled,
   hidden,
   formula,
+  col,
   ...props
 }) => {
   const { lang } = useContext(Context);
@@ -49,6 +48,7 @@ const FormItem: FC<FormItemProps> = ({
       }
       className={className}
       hidden={hidden}
+      wrapperCol={{ ...col }}
     >
       <Element
         {...((element === 'formula' || element === 'formList') && {

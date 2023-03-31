@@ -6,7 +6,7 @@ import { default as JSColor } from 'color';
 //
 import style from './style.module.scss';
 import { storage } from '../../../utils/ux';
-import { elementType } from '../../../types';
+import { attrsType, elementType, onComboChange } from '../../../types';
 //
 import cn from 'classnames';
 
@@ -16,6 +16,8 @@ type ColorProps = {
   target: number;
   ukey: string;
   element: elementType;
+  attrs: attrsType;
+  onComboChange?: onComboChange;
 };
 
 const Color: FC<ColorProps> = ({
@@ -24,15 +26,19 @@ const Color: FC<ColorProps> = ({
   target,
   ukey,
   element,
+  attrs,
+  onComboChange,
 }) => {
   const [color, setColor] = useState(JSColor(defaultValue).hex());
   const [visible, setVisible] = useState(false);
+
+  const [key, index] = ukey.split('_');
 
   const onChange = (value: ColorResult) => {
     const color = value.hex;
 
     setColor(color);
-    storage('settings').add(ukey, {
+    storage('settings').add(key, {
       target,
       value: color,
       element,
@@ -48,6 +54,11 @@ const Color: FC<ColorProps> = ({
         })}
         onClick={() => setVisible((prevState) => !prevState)}
       >
+        {attrs && attrs.addonBefore ? (
+          <div className={style['swatch__addonBefore']}>
+            {attrs.addonBefore}
+          </div>
+        ) : null}
         <div className={style.color} style={{ backgroundColor: color }} />
       </div>
       {visible ? (

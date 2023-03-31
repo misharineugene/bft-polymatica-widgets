@@ -5,8 +5,12 @@ export const getSettings = (settings) => {
   return {
     show: settings[HeatEViewKey.Show],
     //
-    path: settings[HeatEViewKey.Value],
+    valueH: settings[HeatEViewKey.ValueH] || '',
     //
     radius: settings[HeatEViewKey.Radius] || '50',
+    //
+    colorMin: settings[HeatEViewKey.ColorMin],
+    colorAvg: settings[HeatEViewKey.ColorAvg],
+    colorMax: settings[HeatEViewKey.ColorMax],
   };
 };

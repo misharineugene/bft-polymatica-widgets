@@ -5,6 +5,6 @@ export const getSettings = (settings) => {
   return {
     show: settings[ClusterEViewKey.Show],
     //
-    radius: settings[ClusterEViewKey.Radius] || '80',
+    radius: settings[ClusterEViewKey.Radius] || '75',
   };
 };

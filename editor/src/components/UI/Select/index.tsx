@@ -1,14 +1,18 @@
 import { FC, useContext, MutableRefObject } from 'react';
 //
 import { Select as AntdSelect, SelectProps as AntdSelectProps } from 'antd';
-// consts
-import { MAX_WIDTH } from '../../../constants/global';
 // utils
 import { storage } from '../../../utils/ux';
 import { getOptions } from '../../../utils/getOptions';
 import { Context } from '../../../utils/getContext';
 // types
-import { elementType, onFormType, optionType } from '../../../types';
+import {
+  attrsType,
+  elementType,
+  onComboChange,
+  onFormType,
+  optionType,
+} from '../../../types';
 
 type SelectProps = AntdSelectProps & {
   uref: MutableRefObject<HTMLDivElement>;
@@ -17,6 +21,8 @@ type SelectProps = AntdSelectProps & {
   ukey: string;
   target: number;
   element: elementType;
+  attrs: attrsType;
+  onComboChange?: onComboChange;
 };
 
 const Select: FC<SelectProps> = ({
@@ -28,6 +34,7 @@ const Select: FC<SelectProps> = ({
   uref,
   target,
   element,
+  onComboChange,
 }) => {
   const { lang } = useContext(Context);
 
@@ -41,7 +48,7 @@ const Select: FC<SelectProps> = ({
   };
 
   return (
-    <div ref={uref} style={{ maxWidth: MAX_WIDTH }}>
+    <div ref={uref}>
       <AntdSelect
         disabled={disabled}
         defaultValue={defaultValue}

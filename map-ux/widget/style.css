@@ -15,10 +15,36 @@ body {
   height: 100%;
 }
 
+.tooltip-loop {
+}
+
 .tooltip-line {
   margin-bottom: 5px;
 }
 
 .tooltip-line:last-child {
   margin-bottom: 0;
+}
+
+.leaflet-popup-content-wrapper {
+  padding: 15px !important;
+  /*  */
+  background-color: #c7b4ef !important;
+}
+
+.leaflet-popup-content {
+  padding: 15px;
+  margin: 0 !important;
+  /*  */
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  color: #fff !important;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #c7b4ef !important;
 }
