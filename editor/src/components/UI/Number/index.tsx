@@ -5,13 +5,15 @@ import { InputNumber, InputNumberProps } from 'antd';
 import { storage } from '../../../utils/ux';
 import { valueType } from 'antd/es/statistic/utils';
 // types
-import { elementType } from '../../../types';
+import { attrsType, elementType, onComboChange } from '../../../types';
 
 type NumberProps = InputNumberProps & {
   uref: MutableRefObject<HTMLInputElement>;
   target: number;
   ukey: string;
   element: elementType;
+  attrs: attrsType;
+  onComboChange?: onComboChange;
 };
 
 const Number: FC<NumberProps> = ({
@@ -21,13 +23,21 @@ const Number: FC<NumberProps> = ({
   target,
   ukey,
   element,
+  attrs,
+  onComboChange,
 }) => {
+  const [key, index] = ukey.split('_');
+
   const onChange = (value: valueType | null) => {
-    storage('settings').add(ukey, {
-      target,
-      value,
-      element,
-    });
+    if (onComboChange) {
+      onComboChange(value, index);
+    } else {
+      storage('settings').add(key, {
+        target,
+        value,
+        element,
+      });
+    }
   };
 
   return (
@@ -36,6 +46,7 @@ const Number: FC<NumberProps> = ({
       disabled={disabled}
       defaultValue={defaultValue}
       onChange={onChange}
+      {...attrs}
     />
   );
 };

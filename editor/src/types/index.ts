@@ -1,6 +1,6 @@
-import { MutableRefObject, ReactNode } from 'react';
+import { MutableRefObject } from 'react';
 //
-import { TourStepProps } from 'antd';
+import { ColProps, TourStepProps } from 'antd';
 
 export type langType = 'ru' | 'en';
 
@@ -14,7 +14,9 @@ export type elementType =
   | 'formList'
   | 'formula'
   | 'color'
-  | 'text';
+  | 'text'
+  | 'slider'
+  | 'combo';
 
 export type labelType = {
   ru: string;
@@ -27,28 +29,37 @@ export type optionType = {
 };
 
 type helpLangType = {
-  title: ReactNode;
-  description?: ReactNode;
+  title: string;
+  description?: string;
 };
 
 type helpType = {
   ru: helpLangType;
   en: helpLangType;
-  cover?: ReactNode;
-  target?: () => HTMLElement | HTMLElement;
+  cover?: string[];
 };
+
+export type valueType = boolean | number | string;
+
+export type attrsType = {
+  [key: string]: any;
+};
+
+export type onComboChange = (value: valueType | null, index: string) => void;
 
 export type childType = {
   key: string;
   label: labelType;
   element: elementType;
-  defaultValue: boolean | number | string;
+  defaultValue: valueType;
   //
+  col?: ColProps;
+  attrs?: attrsType;
   help?: helpType;
   target?: number;
   options?: optionType[];
   extraBy?: string;
-  extraByValues?: (boolean | number | string)[];
+  extraByValues?: valueType[];
   formulaBy?: string;
   formListWords?: labelType[];
   kids?: childType[];
@@ -66,10 +77,7 @@ export type stepsType = {
 
 export type keyType = string | string[];
 
-export type onFormType = (
-  key: string,
-  value: boolean | number | string,
-) => void;
+export type onFormType = (key: string, value: valueType) => void;
 
 export type refsType = MutableRefObject<null>[];
 
@@ -102,7 +110,7 @@ export type stateType = {
 export type settingItemType = {
   target: number;
   element: elementType;
-  value: boolean | number | string;
+  value: valueType;
 };
 ////////////////////////
 export type hasArrType = {

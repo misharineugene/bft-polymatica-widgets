@@ -13,6 +13,7 @@ import { getMapSettings } from './settings/map/map.settings';
 import { getClusterSettings } from './settings/cluster/cluster.settings';
 import { getHeatSettings } from './settings/heat/heat.settings';
 import { getTooltipSettings } from './settings/tooltip/tooltip.settings';
+import { getDigitSettings } from './settings/digit/digit.settings';
 
 export const createViewSettings: CreateViewSettings<DataSettings> = ({
   dataSettings,
@@ -22,14 +23,14 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
   viewSettings: ViewSettings;
 }) => {
   return [
-    // checkbox({
-    //   key: EViewKey.CustomEditor,
-    //   label: {
-    //     ru: 'Кастомный редактор',
-    //     en: 'Custom editor',
-    //   },
-    //   defaultValue: false,
-    // }),
+    checkbox({
+      key: EViewKey.CustomEditor,
+      label: {
+        ru: 'Кастомный редактор',
+        en: 'Custom editor',
+      },
+      defaultValue: false,
+    }),
     //
     getGroupLabel('Карта', 'Map'),
     ...getMapSettings(),
@@ -42,6 +43,9 @@ export const createViewSettings: CreateViewSettings<DataSettings> = ({
     //
     getGroupLabel('Всплывающие подсказки', 'Tooltip'),
     ...getTooltipSettings(),
+    //
+    getGroupLabel('Разрядность значений', 'Bit depth of values'),
+    ...getDigitSettings(),
   ];
 };
 

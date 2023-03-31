@@ -1,7 +1,11 @@
 export enum HeatEViewKey {
   Show = 'heatShow',
   //
-  Value = 'heatValue',
+  ValueH = 'heatValueH',
   //
   Radius = 'heatRadius',
+  //
+  ColorMin = 'heatColorMin',
+  ColorAvg = 'heatColorAvg',
+  ColorMax = 'heatColorMax',
 }

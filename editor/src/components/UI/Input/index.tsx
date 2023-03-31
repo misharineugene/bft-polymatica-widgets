@@ -14,6 +14,7 @@ type InputProps = AntdInputProps & {
   ukey: string;
   element: elementType;
   target: number;
+  isCombo?: boolean;
 };
 
 const Input: FC<InputProps> = ({
@@ -24,6 +25,7 @@ const Input: FC<InputProps> = ({
   uref,
   element,
   target,
+  isCombo,
 }) => {
   useEffect(() => {
     dispatch(String(defaultValue));

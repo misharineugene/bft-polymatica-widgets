@@ -10,7 +10,7 @@ export const getClusterSettings = () => {
         ru: 'Объединить метки в группы',
         en: 'Combine markers into groups',
       },
-      defaultValue: false,
+      defaultValue: true,
     }),
     //
     input({
@@ -19,7 +19,7 @@ export const getClusterSettings = () => {
         ru: 'Радиус для объединения',
         en: 'Radius to merge',
       },
-      defaultValue: '80',
+      defaultValue: '75',
     }),
   ];
 };

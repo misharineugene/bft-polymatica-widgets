@@ -11,10 +11,11 @@ import { initEditor } from './editor';
 // templates
 import { getMapTpl } from './settings/map/map.template';
 import { getClusterTpl } from './settings/cluster/cluster.template';
+import { getHeatTpl } from './settings/heat/heat.template';
 import { getTooltipTpl } from './settings/tooltip/tooltip.template';
+import { getDigitTpl } from './settings/digit/digit.template';
 // types
 import { SettingType } from './types';
-import { getHeatTpl } from './settings/heat/heat.template';
 
 @Declare({
   provideCssVariables: true,
@@ -37,6 +38,8 @@ export class MapUx extends Widget implements SingleData {
   }
 
   getDataConfig() {
+    const settings = this.settings;
+    //
     const { columnsByBlock } = this.dataSettings;
     //
     const xBlock = columnsByBlock[EBlockKey.X];
@@ -51,6 +54,8 @@ export class MapUx extends Widget implements SingleData {
       ? valuesBlock.map((item) => item.path)
       : [];
     //
+    const toDigital = getDigitTpl(settings);
+    //
     const dataset = this.data.map((item) => {
       return {
         x: item[xPath] || '',
@@ -58,7 +63,7 @@ export class MapUx extends Widget implements SingleData {
         lon: Number(item[lonPath]) || 0,
         values: valuesPaths.map((valPath, valIndex) => ({
           name: valuesBlock[valIndex].name,
-          value: item[valPath],
+          value: toDigital(item[valPath]),
         })),
       };
     });
@@ -97,8 +102,6 @@ export class MapUx extends Widget implements SingleData {
   };
 
   private chartInit = () => {
-    this.settings = { ...this.viewSettings };
-
     const server = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     this._chart = L.map('view');
 
@@ -114,6 +117,7 @@ export class MapUx extends Widget implements SingleData {
       this._chart.off();
       this._chart.remove();
       this._chart = undefined;
+      this.markers = [];
 
       this.chartInit();
     }
@@ -122,6 +126,7 @@ export class MapUx extends Widget implements SingleData {
   };
 
   onChange(): void {
+    this.settings = { ...this.viewSettings };
     this.chart();
 
     this.ready();

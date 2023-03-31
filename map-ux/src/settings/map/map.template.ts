@@ -3,7 +3,7 @@ import * as L from 'leaflet';
 // consts
 import { getSettings } from './map.consts';
 
-export function getMapTpl(settings, _, widgter) {
+export function getMapTpl(settings, _, widget) {
   const settingsObj = getSettings(settings);
   //
   const {
@@ -14,18 +14,34 @@ export function getMapTpl(settings, _, widgter) {
     maskOpacity,
   } = settingsObj;
 
-  const centerArr = center.split(',').map((item) => Number(item) || 0);
+  const centerArr = center.split('::').map((item) => Number(item) || 0);
   const options = [centerArr, parseInt(zoom) || 4, { animation: true }];
 
   if (mask) {
-    L.mask('leaflet/geojson/russia.geojson', {
-      fillOpacity: Number(maskOpacity) || 1,
-    }).addTo(widgter._chart);
-    widgter._chart.options.minZoom = 3;
-    setTimeout(() => {
-      widgter._chart.setView(...options);
-    }, 1000);
+    const maskInit = () => {
+      if (L.mask) {
+        L.mask('leaflet/geojson/russia.geojson', {
+          fillOpacity: Number(maskOpacity) || 1,
+        }).addTo(widget._chart);
+        widget._chart.options.minZoom = 3;
+        setTimeout(() => {
+          widget._chart.setView(...options);
+        }, 1000);
+
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    const interval = setInterval(() => {
+      if (maskInit()) clearInterval(interval);
+    }, 300);
   }
 
-  widgter._chart.setView(...options);
+  widget._chart.setView(...options);
+
+  widget._chart.on('click', (e) => {
+    console.log('e >>', e);
+  });
 }
