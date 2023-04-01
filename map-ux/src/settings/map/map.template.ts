@@ -22,12 +22,9 @@ export function getMapTpl(settings, _, widget) {
       if (L.mask) {
         L.mask('leaflet/geojson/russia.geojson', {
           fillOpacity: Number(maskOpacity) || 1,
+          fitBounds: false,
+          restrictBounds: false,
         }).addTo(widget._chart);
-        widget._chart.options.minZoom = 3;
-        setTimeout(() => {
-          widget._chart.setView(...options);
-        }, 1000);
-
         return true;
       } else {
         return false;
@@ -39,7 +36,12 @@ export function getMapTpl(settings, _, widget) {
     }, 300);
   }
 
+  if (mask) widget._chart.options.minZoom = 3;
+
   widget._chart.setView(...options);
+
+  const server = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  L.tileLayer(server, {}).addTo(widget._chart);
 
   widget._chart.on('click', (e) => {
     console.log('e >>', e);
