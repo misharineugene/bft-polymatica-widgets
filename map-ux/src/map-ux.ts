@@ -102,10 +102,7 @@ export class MapUx extends Widget implements SingleData {
   };
 
   private chartInit = () => {
-    const server = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     this._chart = L.map('view');
-
-    L.tileLayer(server, {}).addTo(this._chart);
 
     this.getChartOptions();
   };
