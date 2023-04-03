@@ -22,14 +22,6 @@ export const getLegendSettings = () => {
       defaultValue: true,
     }),
     /////////////////////////////////////
-    input({
-      key: LegendEViewKey.Type,
-      label: {
-        ru: 'Тип',
-        en: 'Type',
-      },
-      defaultValue: legendType[0][0],
-    }),
     select({
       key: LegendEViewKey.Type,
       label: {
@@ -37,6 +29,14 @@ export const getLegendSettings = () => {
         en: 'Type',
       },
       options: legendType.map(getSelectItems),
+      defaultValue: legendType[0][0],
+    }),
+    input({
+      key: LegendEViewKey.Type,
+      label: {
+        ru: 'Тип',
+        en: 'Type',
+      },
       defaultValue: legendType[0][0],
     }),
     /////////////////////////////////////
@@ -98,14 +98,6 @@ export const getLegendSettings = () => {
       defaultValue: '10',
     }),
     /////////////////////////////////////
-    input({
-      key: LegendEViewKey.Orient,
-      label: {
-        ru: 'Ориентация',
-        en: 'Orient',
-      },
-      defaultValue: orient[0][0],
-    }),
     select({
       key: LegendEViewKey.Orient,
       label: {
@@ -113,6 +105,14 @@ export const getLegendSettings = () => {
         en: 'Orient',
       },
       options: orient.map(getSelectItems),
+      defaultValue: orient[0][0],
+    }),
+    input({
+      key: LegendEViewKey.Orient,
+      label: {
+        ru: 'Ориентация',
+        en: 'Orient',
+      },
       defaultValue: orient[0][0],
     }),
     /////////////////////////////////////
@@ -172,14 +172,6 @@ export const getLegendSettings = () => {
       },
       defaultValue: '18',
     }),
-    input({
-      key: LegendEViewKey.TextAlign,
-      label: {
-        ru: 'Выравнивание текста',
-        en: 'Text Align',
-      },
-      defaultValue: align[0][0],
-    }),
     select({
       key: LegendEViewKey.TextAlign,
       label: {
@@ -187,6 +179,14 @@ export const getLegendSettings = () => {
         en: 'Text Align',
       },
       options: align.map(getSelectItems),
+      defaultValue: align[0][0],
+    }),
+    input({
+      key: LegendEViewKey.TextAlign,
+      label: {
+        ru: 'Выравнивание текста',
+        en: 'Text Align',
+      },
       defaultValue: align[0][0],
     }),
     input({
@@ -198,14 +198,6 @@ export const getLegendSettings = () => {
       defaultValue: '',
     }),
     /////////////////////////////////////
-    input({
-      key: LegendEViewKey.IconType,
-      label: {
-        ru: 'Иконка',
-        en: 'Icon',
-      },
-      defaultValue: iconType[0][0],
-    }),
     select({
       key: LegendEViewKey.IconType,
       label: {
@@ -213,6 +205,14 @@ export const getLegendSettings = () => {
         en: 'Icon',
       },
       options: iconType.map(getSelectItems),
+      defaultValue: iconType[0][0],
+    }),
+    input({
+      key: LegendEViewKey.IconType,
+      label: {
+        ru: 'Иконка',
+        en: 'Icon',
+      },
       defaultValue: iconType[0][0],
     }),
   ];

@@ -78,14 +78,6 @@ export const getTitleSettings = () => {
       },
       defaultValue: '27',
     }),
-    input({
-      key: TitleEViewKey.TextAlign,
-      label: {
-        ru: 'Выравнивание текста',
-        en: 'Text Align',
-      },
-      defaultValue: textAlign[0][0],
-    }),
     select({
       key: TitleEViewKey.TextAlign,
       label: {
@@ -93,6 +85,14 @@ export const getTitleSettings = () => {
         en: 'Text Align',
       },
       options: textAlign.map(getSelectItems),
+      defaultValue: textAlign[0][0],
+    }),
+    input({
+      key: TitleEViewKey.TextAlign,
+      label: {
+        ru: 'Выравнивание текста',
+        en: 'Text Align',
+      },
       defaultValue: textAlign[0][0],
     }),
     input({
@@ -112,14 +112,6 @@ export const getTitleSettings = () => {
       },
       defaultValue: '',
     }),
-    input({
-      key: TitleEViewKey.Target,
-      label: {
-        ru: 'Окрывать ссылку',
-        en: 'Open link',
-      },
-      defaultValue: target[1][0],
-    }),
     select({
       key: TitleEViewKey.Target,
       label: {
@@ -127,6 +119,14 @@ export const getTitleSettings = () => {
         en: 'Open link',
       },
       options: target.map(getSelectItems),
+      defaultValue: target[1][0],
+    }),
+    input({
+      key: TitleEViewKey.Target,
+      label: {
+        ru: 'Окрывать ссылку',
+        en: 'Open link',
+      },
       defaultValue: target[1][0],
     }),
     /////////////////////////////////////

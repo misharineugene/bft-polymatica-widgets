@@ -11,6 +11,8 @@ export function getXAxisTpl(settings): XAxisType {
     position,
     type,
     //
+    inverse,
+    //
     min,
     max,
     //
@@ -33,6 +35,8 @@ export function getXAxisTpl(settings): XAxisType {
     position,
     //
     type,
+    //
+    inverse,
     //
     axisLine: {
       show,

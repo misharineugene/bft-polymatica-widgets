@@ -23,14 +23,6 @@ export const getYAxisSettings = () => {
       defaultValue: true,
     }),
     /////////////////////////////////////
-    input({
-      key: YAxisEViewKey.Position,
-      label: {
-        ru: 'Расположение',
-        en: 'Position',
-      },
-      defaultValue: position[0][0],
-    }),
     select({
       key: YAxisEViewKey.Position,
       label: {
@@ -40,15 +32,15 @@ export const getYAxisSettings = () => {
       options: position.map(getSelectItems),
       defaultValue: position[0][0],
     }),
-    /////////////////////////////////////
     input({
-      key: YAxisEViewKey.Type,
+      key: YAxisEViewKey.Position,
       label: {
-        ru: 'Тип оси',
-        en: 'Axis type',
+        ru: 'Расположение',
+        en: 'Position',
       },
-      defaultValue: type[0][0],
+      defaultValue: position[0][0],
     }),
+    /////////////////////////////////////
     select({
       key: YAxisEViewKey.Type,
       label: {
@@ -57,6 +49,23 @@ export const getYAxisSettings = () => {
       },
       options: type.map(getSelectItems),
       defaultValue: type[0][0],
+    }),
+    input({
+      key: YAxisEViewKey.Type,
+      label: {
+        ru: 'Тип оси',
+        en: 'Axis type',
+      },
+      defaultValue: type[0][0],
+    }),
+    /////////////////////////////////////
+    checkbox({
+      key: YAxisEViewKey.Inverse,
+      label: {
+        ru: 'Инвертировать',
+        en: 'Inverse',
+      },
+      defaultValue: false,
     }),
     /////////////////////////////////////
     input({
@@ -84,14 +93,6 @@ export const getYAxisSettings = () => {
       },
       defaultValue: 'auto',
     }),
-    input({
-      key: YAxisEViewKey.LabelRotate,
-      label: {
-        ru: 'Угол наклона значений на оси',
-        en: 'The slope of the values on the axis',
-      },
-      defaultValue: rotate[0][0],
-    }),
     select({
       key: YAxisEViewKey.LabelRotate,
       label: {
@@ -99,6 +100,14 @@ export const getYAxisSettings = () => {
         en: 'The slope of the values on the axis',
       },
       options: rotate.map(getSelectItems),
+      defaultValue: rotate[0][0],
+    }),
+    input({
+      key: YAxisEViewKey.LabelRotate,
+      label: {
+        ru: 'Угол наклона значений на оси',
+        en: 'The slope of the values on the axis',
+      },
       defaultValue: rotate[0][0],
     }),
     /////////////////////////////////////
@@ -158,14 +167,6 @@ export const getYAxisSettings = () => {
       },
       defaultValue: '1',
     }),
-    input({
-      key: YAxisEViewKey.LabelTextAlign,
-      label: {
-        ru: 'Выравнивание текста',
-        en: 'Text Align',
-      },
-      defaultValue: textAlign[2][0],
-    }),
     select({
       key: YAxisEViewKey.LabelTextAlign,
       label: {
@@ -173,6 +174,14 @@ export const getYAxisSettings = () => {
         en: 'Text Align',
       },
       options: textAlign.map(getSelectItems),
+      defaultValue: textAlign[2][0],
+    }),
+    input({
+      key: YAxisEViewKey.LabelTextAlign,
+      label: {
+        ru: 'Выравнивание текста',
+        en: 'Text Align',
+      },
       defaultValue: textAlign[2][0],
     }),
     input({

@@ -9,6 +9,8 @@ export enum YAxisEViewKey {
   //
   Type = 'yAxisType',
   //
+  Inverse = 'yAxisInverse',
+  //
   Min = 'yAxisMin',
   Max = 'yAxisMax',
   //

@@ -40,6 +40,8 @@ export const getSettings = (settings) => {
     //
     type: settings[XAxisEViewKey.Type],
     //
+    inverse: settings[XAxisEViewKey.Inverse],
+    //
     min: settings[XAxisEViewKey.Min],
     max: settings[XAxisEViewKey.Max],
     //

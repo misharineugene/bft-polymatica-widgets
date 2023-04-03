@@ -8,14 +8,6 @@ import { LineEViewKey } from './line.types';
 
 export const getLineSettings = () => {
   return [
-    input({
-      key: LineEViewKey.ColorBy,
-      label: {
-        ru: 'Цвет элемента',
-        en: 'Item color',
-      },
-      defaultValue: colorBy[0][0],
-    }),
     select({
       key: LineEViewKey.ColorBy,
       label: {
@@ -23,6 +15,14 @@ export const getLineSettings = () => {
         en: 'Item color',
       },
       options: colorBy.map(getSelectItems),
+      defaultValue: colorBy[0][0],
+    }),
+    input({
+      key: LineEViewKey.ColorBy,
+      label: {
+        ru: 'Цвет элемента',
+        en: 'Item color',
+      },
       defaultValue: colorBy[0][0],
     }),
     /////////////////////////////////////
@@ -35,14 +35,6 @@ export const getLineSettings = () => {
       defaultValue: false,
     }),
     /////////////////////////////////////
-    input({
-      key: LineEViewKey.Type,
-      label: {
-        ru: 'Тип линий',
-        en: 'Line type',
-      },
-      defaultValue: type[0][0],
-    }),
     select({
       key: LineEViewKey.Type,
       label: {
@@ -50,6 +42,14 @@ export const getLineSettings = () => {
         en: 'Line type',
       },
       options: type.map(getSelectItems),
+      defaultValue: type[0][0],
+    }),
+    input({
+      key: LineEViewKey.Type,
+      label: {
+        ru: 'Тип линий',
+        en: 'Line type',
+      },
       defaultValue: type[0][0],
     }),
     /////////////////////////////////////
