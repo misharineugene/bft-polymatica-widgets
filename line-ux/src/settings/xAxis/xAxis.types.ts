@@ -9,6 +9,8 @@ export enum XAxisEViewKey {
   //
   Type = 'xAxisType',
   //
+  Inverse = 'xAxisInverse',
+  //
   Min = 'xAxisMin',
   Max = 'xAxisMax',
   //

@@ -25,6 +25,8 @@ export const getSettings = (settings): YAxisType => {
     //
     type: settings[YAxisEViewKey.Type],
     //
+    inverse: settings[YAxisEViewKey.Inverse],
+    //
     axisLine: {
       show,
     },

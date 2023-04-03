@@ -23,14 +23,6 @@ export const getTooltipSettings = () => {
       defaultValue: true,
     }),
     /////////////////////////////////////
-    input({
-      key: TooltipEViewKey.Trigger,
-      label: {
-        ru: 'Тип срабатывания',
-        en: 'Type of triggering',
-      },
-      defaultValue: trigger[0][0],
-    }),
     select({
       key: TooltipEViewKey.Trigger,
       label: {
@@ -41,12 +33,12 @@ export const getTooltipSettings = () => {
       defaultValue: trigger[0][0],
     }),
     input({
-      key: TooltipEViewKey.TriggerOn,
+      key: TooltipEViewKey.Trigger,
       label: {
-        ru: 'Условие срабатывания',
-        en: 'Conditions to trigger',
+        ru: 'Тип срабатывания',
+        en: 'Type of triggering',
       },
-      defaultValue: triggerOn[0][0],
+      defaultValue: trigger[0][0],
     }),
     select({
       key: TooltipEViewKey.TriggerOn,
@@ -55,6 +47,14 @@ export const getTooltipSettings = () => {
         en: 'Conditions to trigger',
       },
       options: triggerOn.map(getSelectItems),
+      defaultValue: triggerOn[0][0],
+    }),
+    input({
+      key: TooltipEViewKey.TriggerOn,
+      label: {
+        ru: 'Условие срабатывания',
+        en: 'Conditions to trigger',
+      },
       defaultValue: triggerOn[0][0],
     }),
     /////////////////////////////////////
@@ -114,14 +114,6 @@ export const getTooltipSettings = () => {
       },
       defaultValue: '18',
     }),
-    input({
-      key: TooltipEViewKey.TextAlign,
-      label: {
-        ru: 'Выравнивание текста',
-        en: 'Text Align',
-      },
-      defaultValue: textAlign[0][0],
-    }),
     select({
       key: TooltipEViewKey.TextAlign,
       label: {
@@ -129,6 +121,14 @@ export const getTooltipSettings = () => {
         en: 'Text Align',
       },
       options: textAlign.map(getSelectItems),
+      defaultValue: textAlign[0][0],
+    }),
+    input({
+      key: TooltipEViewKey.TextAlign,
+      label: {
+        ru: 'Выравнивание текста',
+        en: 'Text Align',
+      },
       defaultValue: textAlign[0][0],
     }),
     input({
